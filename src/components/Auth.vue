@@ -15,13 +15,15 @@
             </div>
         </div>
     </form>
+
+    <h1 v-if="loading">Loading</h1>
 </template>
 
 <script setup lang="ts">
 import { ref } from 'vue'
 import { supabase } from './../services/supabase'
+import { loading } from '../store/auth'
 
-const loading = ref(false)
 const email = ref('')
 const password = ref('')
 

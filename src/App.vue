@@ -1,6 +1,9 @@
 <template>
   <v-app id="inspire">
-    <div v-if="session">
+    <div v-if="loading">
+      <h1>Loading...</h1>
+    </div>
+    <div v-else-if="session && !loading">
       <v-main>
         <AppBar />
         <Account/>
@@ -17,19 +20,19 @@ import Account from './components/Account.vue'
 import AppBar from './components/AppBar.vue'
 import Auth from './components/Auth.vue'
 import { supabase } from './services/supabase'
-import { session } from './store/auth'
+import { loading, session } from './store/auth'
+import { loadHotels } from './services/hotel'
 
 onMounted(() => {
-  supabase.auth.getSession().then(({ data  }) => {
-    session.value = data.session;
-    console.log('get session: ')
-    console.log(data.session)
-  })
+  loading.value = true;
+  supabase.auth.getSession();
 
-  supabase.auth.onAuthStateChange((_, _session) => {
-    session.value = _session
-    console.log('on change: ');
-    console.log(_session)
+  supabase.auth.onAuthStateChange(async (_, _session) => {
+    if (_session != null && _session.user.id != session.value?.user.id) {
+      session.value = _session
+      await loadHotels();
+    }
+    loading.value = false;
   })
 })
 </script>
