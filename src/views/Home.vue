@@ -1,7 +1,36 @@
 <template>
-  <HelloWorld />
+  <v-container>
+    <v-row align="center" justify="center">
+      <v-col
+        v-for="(hotel, i) in hotels"
+        :key="i"
+        cols="auto"
+      >
+        <v-card
+          @click="changeCurrentHotel(hotel)"
+          class="mx-auto"
+          max-width="344"
+          min-width="344"
+          color="indigo-darken-3"
+        >
+          <v-card-item>
+            <div class="text-overline mb-1">Hotel</div>
+            <div class="text-h6 mb-1">{{ hotel.name }}</div>
+          </v-card-item>
+        </v-card>
+      </v-col>
+    </v-row>
+  </v-container>
 </template>
 
-<script lang="ts" setup>
-  import HelloWorld from '@/components/HelloWorld.vue'
+<script setup lang="ts">
+import { hotels, currentHotel, Hotel } from '@/services/hotel';
+import { useRouter } from 'vue-router';
+
+const router = useRouter();
+
+function changeCurrentHotel(hotel: Hotel) {
+  currentHotel.value = hotel;
+  router.push({ name: 'Hotel' });
+}
 </script>
