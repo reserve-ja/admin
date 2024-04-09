@@ -1,6 +1,6 @@
 <template>
   <v-app>
-    <app-bar />
+    <app-bar :loading="false"/>
     <v-main>
       <router-view />
     </v-main>

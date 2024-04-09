@@ -7,7 +7,7 @@
         cols="auto"
       >
         <v-card
-          @click="changeCurrentHotel(hotel)"
+          @click="changeHotel(hotel)"
           class="mx-auto"
           max-width="344"
           min-width="344"
@@ -24,13 +24,17 @@
 </template>
 
 <script setup lang="ts">
-import { hotels, currentHotel, Hotel } from '@/services/hotel';
+import { useCurrentHotel, useListHotels } from '@/services/hotel';
+import { Hotel } from '@/services/hotel.types';
 import { useRouter } from 'vue-router';
 
 const router = useRouter();
 
-function changeCurrentHotel(hotel: Hotel) {
-  currentHotel.value = hotel;
+const { hotels } = useListHotels();
+const { changeCurrentHotel } = useCurrentHotel();
+
+function changeHotel(hotel: Hotel) {
+  changeCurrentHotel(hotel.id);
   router.push({ name: 'Hotel' });
 }
 </script>

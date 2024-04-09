@@ -6,7 +6,7 @@
     />
     <v-select
       v-model="formData.pms"
-      :items="pms"
+      :items="availablePms"
       item-title="name"
       item-value="id"
     />
@@ -14,14 +14,20 @@
   <div>
     {{ currentHotel }}
   </div>
-  <div>{{ pms }}</div>
+  <div>{{ formData.pms }}</div>
 </template>
 
 <script setup lang="ts">
-import { currentHotel, fetchAvailablePms, pms } from '@/services/hotel';
+// import { useCurrentHotel } from '@/services/hotel';
+import { useCurrentHotel, useListHotels } from '@/services/hotel';
+import { computed } from 'vue';
 import { ref } from 'vue';
-import { onMounted } from 'vue';
-import { onBeforeRouteUpdate } from 'vue-router';
+
+// const { currentHotel } = useCurrentHotel();
+const { hotels } = useListHotels();
+const { hotelId } = useCurrentHotel();
+
+const currentHotel = computed(() => hotels.value?.find(hotel => hotel.id === hotelId.value));
 
 const formData = ref({
   hotelId: currentHotel.value?.id,
@@ -29,10 +35,8 @@ const formData = ref({
   configuration: currentHotel.value?.configuration,
 });
 
-onMounted(async () => {
-  await fetchAvailablePms();
-});
-
-onBeforeRouteUpdate((to, from) => {
-})
+const availablePms = [
+  { id: 'None', name: 'Nenhum' },
+  { id: 'Letoh', name: 'MDE Letoh' },
+];
 </script>

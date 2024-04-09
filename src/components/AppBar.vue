@@ -9,15 +9,16 @@
     <v-menu v-if="!props.loading">
       <template v-slot:activator="{ props }">
         <div v-bind="props" class="mr-5 account-menu">
-          <v-avatar color="white" class="mr-2">
+          {{ session?.user.email?.split("@")[0] }}
+          <v-avatar color="white" class="ml-2">
             {{ session?.user.email?.charAt(0).toUpperCase() }}
           </v-avatar>
-          {{ session?.user.email?.split("@")[0] }}
         </div>
       </template>
 
       <v-list density="compact">
         <v-list-item class="text-caption">{{ session?.user.email }}</v-list-item>
+        <v-divider />
         <v-list-item @click="logout">
           <template v-slot:prepend>
             <v-icon icon="mdi-logout" />
@@ -37,8 +38,8 @@
       <v-autocomplete
         v-else
         :model-value="currentHotel"
-        @update:model-value="changeCurrentHotel"
-        :items="hotels ?? []"
+        @update:model-value="changeHotel"
+        :items="hotels"
         density="comfortable"
         variant="outlined"
         hide-details
@@ -50,11 +51,13 @@
     </div>
 
     <v-divider />
-    <v-skeleton-loader
-      v-if="props.loading"
-      v-for="i in 4"
-      type="list-item"
-    />
+    <div v-if="props.loading">
+      <v-skeleton-loader
+        v-for="i in 4"
+        :key="i"
+        type="list-item"
+      />
+    </div>
     <v-list v-else>
       <v-list-item exact to="/" prepend-icon="mdi-view-dashboard" title="Visão geral" />
       <v-list-item exact to="/rooms" prepend-icon="mdi-bed" title="Quartos" />
@@ -67,8 +70,9 @@
 import { ref } from 'vue'
 import { session } from '@/store/auth'
 import { logout } from '@/services/supabase'
-import { Hotel, hotels, currentHotel } from '@/services/hotel';
 import { computed } from 'vue';
+import { useListHotels, useCurrentHotel } from '@/services/hotel';
+import { Hotel } from '@/services/hotel.types';
 
 interface Props {
   loading: boolean
@@ -78,20 +82,28 @@ const props = withDefaults(
   { loading: false }
 );
 
-const drawer = ref()
+const drawer = ref<boolean>();
 
 const title = computed(() => {
-  if (currentHotel.value.name.length === 0) {
+  if (!currentHotel.value?.name) {
     return "M.B.E.";
   }
 
-  return `M.B.E. — ${currentHotel.value.name}`
+  return `M.B.E. — ${currentHotel.value?.name}`
+});
+
+const { hotels } = useListHotels();
+const { hotelId, changeCurrentHotel } = useCurrentHotel();
+
+const currentHotel = computed(() => {
+  return hotels.value?.find(hotel => hotel.id === hotelId.value);
 })
 
-function changeCurrentHotel(hotel: Hotel) {
-  currentHotel.value = hotel;
+// const router = useRouter();
+function changeHotel(hotel: Hotel) {
+  changeCurrentHotel(hotel.id);
+  // router.push({ name: 'Hotel' });
 }
-
 </script>
 
 <style scoped>

@@ -17,18 +17,25 @@ import Auth from './components/Auth.vue'
 import Loading from '@/layouts/Loading.vue'
 import { supabase } from './services/supabase'
 import { loading, session } from './store/auth'
-import { fetchHotels } from './services/hotel'
+import { useQueryClient } from '@tanstack/vue-query'
+import { useListHotels } from './services/hotel'
 
 onMounted(() => {
   loading.value = true;
   supabase.auth.getSession();
-
   supabase.auth.onAuthStateChange(async (_, _session) => {
     if (_session != null && _session.user.id != session.value?.user.id) {
-      session.value = _session
-      await fetchHotels();
+      session.value = _session;
+
+      console.log('on auth change');
+      // useHotels().refetch();
+      // useQueryClient().invalidateQueries({ queryKey: ['hotels'], exact: true });
+      // await fetchHotels();
     }
     loading.value = false;
-  })
+  });
+
+  const { hotels } = useListHotels();
+
 })
 </script>

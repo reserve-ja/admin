@@ -12,7 +12,8 @@
       class="text-none"
       prepend-icon="mdi-sync"
       variant="outlined"
-      @click="syncRooms(currentHotel.id)"
+      :loading="isSyncing"
+      @click="syncRooms"
     >
       Sincronizar quartos
     </v-btn>
@@ -20,20 +21,30 @@
   <v-row>
     <v-col class="mx-5">
       <v-data-table
-        :items="roomsByHotel[currentHotel?.id ?? '']?.rooms"
+        :items="rooms"
         :headers="tableHeaders"
-        :loading="roomsByHotel[currentHotel?.id ?? '']?.loading"
+        :loading="isLoadingRooms"
       >
+        <template v-slot:[`item.name`]="{ item }">
+          <router-link :to="`/rooms/${item.id}`">
+            {{ item.name }}
+          </router-link>
+        </template>
       </v-data-table>
     </v-col>
   </v-row>
 </template>
 
 <script setup lang="ts">
-import { currentHotel } from '@/services/hotel';
-import { roomsByHotel, fetchHotelRooms, syncRooms } from '@/services/room';
-import { onMounted } from 'vue';
-import { onBeforeRouteUpdate } from 'vue-router';
+// import { useCurrentHotel } from '@/services/hotel';
+import { useCurrentHotel } from '@/services/hotel';
+import { useRooms, useSyncRooms } from '@/services/room';
+
+const { hotelId } = useCurrentHotel();
+
+// const { hotelId } = useCurrentHotel();
+const { data: rooms, isPending: isLoadingRooms } = useRooms(hotelId);
+const { mutate: syncRooms, isPending: isSyncing } = useSyncRooms(hotelId.value);
 
 const tableHeaders = [
   { title: 'Nome', value: 'name' },
@@ -41,15 +52,4 @@ const tableHeaders = [
   { title: 'ID Externo', value: 'externalId' },
   { title: 'Ações', key: 'actions', sortable: false },
 ];
-
-onMounted(async () => {
-  if (currentHotel.value === null) {
-    return;
-  }
-
-  await fetchHotelRooms(currentHotel.value.id);
-});
-
-onBeforeRouteUpdate((to, from) => {
-})
 </script>

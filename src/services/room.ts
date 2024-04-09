@@ -1,44 +1,42 @@
-import { ref } from "vue"
+import { Ref, ref } from "vue"
 import { http } from "./http";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/vue-query";
+import { Rate, Room } from "./room.types";
 
-export type Room = {
-  id: string,
+export function useRooms(hotelId: Ref<string>) {
+  return useQuery<Room[]>({
+    queryKey: ['rooms', { hotelId }],
+    queryFn: async () => {
+      console.log(hotelId.value);
+      if (!hotelId.value) {
+        return [];
+      }
+
+      const { data } = await http.get(`/hotels/${hotelId.value}/rooms`);
+      return data;
+    }
+  })
 }
 
-export type RoomState = {
-  rooms: Room[],
-  loading: boolean,
-  error: any|null,
+export function useSyncRooms(hotelId: string) {
+  return useMutation({
+    mutationFn: () => http.post(`/hotels/${hotelId}/rooms/import-from-pms`),
+    onSuccess: () => {
+      useQueryClient().invalidateQueries({ queryKey: ['rooms', { hotelId }]});
+    },
+  });
 }
 
-export const roomsByHotel = ref<{[hotelId: string] : RoomState}>({});
+export function useRoomRates(hotelId: Ref<string>, roomId: Ref<string>) {
+  return useQuery<Rate[]>({
+    queryKey: [ 'rates', { hotelId, roomId } ],
+    queryFn: async () => {
+      if (!hotelId.value || !roomId.value) {
+        return [];
+      }
 
-export async function fetchHotelRooms(hotelId: string, force = false) {
-  if (force === false && roomsByHotel.value[hotelId]) {
-    return;
-  }
-
-  roomsByHotel.value[hotelId] = { rooms: [], loading: true, error: null };
-
-  try {
-    const response = await http.get(`/hotels/${hotelId}/rooms`);
-    roomsByHotel.value[hotelId].rooms = response.data;
-  } catch (error) {
-    roomsByHotel.value[hotelId].error = true;
-  } finally {
-    roomsByHotel.value[hotelId].loading = false;
-  }
-}
-
-export async function syncRooms(hotelId: string) {
-  roomsByHotel.value[hotelId].loading = true;
-  roomsByHotel.value[hotelId].rooms = [];
-
-  try {
-    await http.post(`/hotels/${hotelId}/rooms/import-from-pms`);
-  } catch (error) {
-    roomsByHotel.value[hotelId].error = true;
-  }
-
-  await fetchHotelRooms(hotelId, true);
+      const { data } = await http.get(`/hotels/${hotelId.value}/rooms/${roomId.value}/rates`);
+      return data;
+    }
+  });
 }

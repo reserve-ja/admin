@@ -31,6 +31,7 @@ const handleLogin = async () => {
     try {
         loading.value = true
         const { error } = await supabase.auth.signInWithPassword({ email: email.value, password: password.value })
+        console.log('after login')
         if (error) throw error
     } catch (error) {
         if (error instanceof Error) {
