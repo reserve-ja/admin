@@ -13,7 +13,7 @@
 
 <script setup lang="ts">
 import { onMounted } from 'vue'
-import Auth from './components/Auth.vue'
+import Auth from './views/Auth.vue'
 import Loading from '@/layouts/Loading.vue'
 import { useAuth } from './services/auth'
 

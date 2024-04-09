@@ -12,7 +12,7 @@ const routes = [
           { path: '',               name: 'Hotel', component: () => import('@/views/Hotel.vue') },
           { path: '/rooms',         name: 'Rooms', component: () => import('@/views/Rooms.vue') },
           { path: '/rooms/:roomId', name: 'Room',  component: () => import('@/views/Room.vue'), props: true },
-       ],
+        ],
       },
     ],
   },

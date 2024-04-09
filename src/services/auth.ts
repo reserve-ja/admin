@@ -37,6 +37,7 @@ export function useAuth() {
       if (_session != null && _session.user.id != session.value?.user.id) {
         session.value = _session;
       }
+
       loadingAuth.value = false;
     });
   }
