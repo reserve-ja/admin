@@ -68,8 +68,7 @@
 
 <script setup lang="ts">
 import { ref } from 'vue'
-import { session } from '@/store/auth'
-import { logout } from '@/services/supabase'
+import { useAuth } from '@/services/auth'
 import { computed } from 'vue';
 import { useListHotels, useCurrentHotel } from '@/services/hotel';
 import { Hotel } from '@/services/hotel.types';
@@ -104,6 +103,8 @@ function changeHotel(hotel: Hotel) {
   changeCurrentHotel(hotel.id);
   // router.push({ name: 'Hotel' });
 }
+
+const { session, logout } = useAuth();
 </script>
 
 <style scoped>

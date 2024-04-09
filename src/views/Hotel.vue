@@ -1,24 +1,26 @@
 <template>
-  <v-form>
-    <v-text-field
-      :model-value="currentHotel?.name"
-      readonly
-    />
-    <v-select
-      v-model="formData.pms"
-      :items="availablePms"
-      item-title="name"
-      item-value="id"
-    />
-  </v-form>
-  <div>
-    {{ currentHotel }}
-  </div>
-  <div>{{ formData.pms }}</div>
+  <Page title="Configurações" icon="mdi-cog">
+    <v-form>
+      <v-text-field
+        :model-value="currentHotel?.name"
+        readonly
+      />
+      <v-select
+        v-model="formData.pms"
+        :items="availablePms"
+        item-title="name"
+        item-value="id"
+      />
+    </v-form>
+    <div>
+      {{ currentHotel }}
+    </div>
+    <div>{{ formData.pms }}</div>
+  </Page>
 </template>
 
 <script setup lang="ts">
-// import { useCurrentHotel } from '@/services/hotel';
+import Page from '@/components/Page.vue';
 import { useCurrentHotel, useListHotels } from '@/services/hotel';
 import { computed } from 'vue';
 import { ref } from 'vue';

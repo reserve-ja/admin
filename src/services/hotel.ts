@@ -1,7 +1,7 @@
 import { useQuery } from "@tanstack/vue-query";
 import { http } from "./http";
 import { Hotel } from "./hotel.types";
-import { session } from "@/store/auth";
+import { useAuth } from "@/services/auth";
 import { ref } from "vue";
 
 const hotelId = ref<string>('');
@@ -56,6 +56,7 @@ export function useCurrentHotel() {
   };
 }
 
+const { session } = useAuth();
 export function useListHotels() {
   const { data: hotels, isPending: isLoadingHotels } = useQuery<Hotel[]>({
     queryKey: ['hotels'],

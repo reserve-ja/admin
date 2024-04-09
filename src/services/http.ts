@@ -1,4 +1,4 @@
-import { session } from "@/store/auth";
+import { useAuth } from "@/services/auth";
 import axios from "axios";
 
 export const http = axios.create({
@@ -6,6 +6,7 @@ export const http = axios.create({
   timeout: 2000,
 })
 
+const { session } = useAuth();
 http.interceptors.request.use((config) => {
   if (session.value) {
     config.headers.Authorization = `Bearer ${session.value.access_token}`;

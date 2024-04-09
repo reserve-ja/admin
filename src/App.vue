@@ -1,9 +1,9 @@
 <template>
   <v-app id="inspire">
-    <div v-if="loading">
+    <div v-if="loadingAuth">
       <Loading />
     </div>
-    <div v-else-if="session && !loading">
+    <div v-else-if="session">
       <router-view/>
     </div>
 
@@ -15,27 +15,11 @@
 import { onMounted } from 'vue'
 import Auth from './components/Auth.vue'
 import Loading from '@/layouts/Loading.vue'
-import { supabase } from './services/supabase'
-import { loading, session } from './store/auth'
-import { useQueryClient } from '@tanstack/vue-query'
-import { useListHotels } from './services/hotel'
+import { useAuth } from './services/auth'
 
-onMounted(() => {
-  loading.value = true;
-  supabase.auth.getSession();
-  supabase.auth.onAuthStateChange(async (_, _session) => {
-    if (_session != null && _session.user.id != session.value?.user.id) {
-      session.value = _session;
+const { session, loadingAuth, initAuth } = useAuth();
 
-      console.log('on auth change');
-      // useHotels().refetch();
-      // useQueryClient().invalidateQueries({ queryKey: ['hotels'], exact: true });
-      // await fetchHotels();
-    }
-    loading.value = false;
-  });
-
-  const { hotels } = useListHotels();
-
+onMounted(async () => {
+  await initAuth();
 })
 </script>

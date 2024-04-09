@@ -10,35 +10,25 @@
                 <input class="inputField" type="password" placeholder="Your password" v-model="password" />
             </div>
             <div>
-                <input type="submit" class="button block" :value="loading ? 'Loading' : 'Login'"
-                    :disabled="loading" />
+                <input type="submit" class="button block" :value="loadingAuth ? 'Loading' : 'Login'"
+                    :disabled="loadingAuth" />
             </div>
         </div>
     </form>
 
-    <h1 v-if="loading">Loading</h1>
+    <h1 v-if="loadingAuth">Loading</h1>
 </template>
 
 <script setup lang="ts">
 import { ref } from 'vue'
-import { supabase } from './../services/supabase'
-import { loading } from '../store/auth'
+import { useAuth } from '../services/auth'
 
 const email = ref('')
 const password = ref('')
 
-const handleLogin = async () => {
-    try {
-        loading.value = true
-        const { error } = await supabase.auth.signInWithPassword({ email: email.value, password: password.value })
-        console.log('after login')
-        if (error) throw error
-    } catch (error) {
-        if (error instanceof Error) {
-            alert(error.message)
-        }
-    } finally {
-        loading.value = false
-    }
+const { loadingAuth, login } = useAuth();
+
+function handleLogin() {
+  login(email.value, password.value);
 }
 </script>
