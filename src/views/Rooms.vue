@@ -13,6 +13,7 @@
       prepend-icon="mdi-sync"
       variant="outlined"
       :loading="isSyncing"
+      :disabled="isSyncing"
       @click="syncRooms"
     >
       Sincronizar quartos
@@ -33,18 +34,20 @@
       </v-data-table>
     </v-col>
   </v-row>
+  <pre>
+    {{ isLoadingRooms }}
+  </pre>
+  {{ rooms }}
 </template>
 
 <script setup lang="ts">
-// import { useCurrentHotel } from '@/services/hotel';
 import { useCurrentHotel } from '@/services/hotel';
 import { useRooms, useSyncRooms } from '@/services/room';
 
 const { hotelId } = useCurrentHotel();
 
-// const { hotelId } = useCurrentHotel();
-const { data: rooms, isPending: isLoadingRooms } = useRooms(hotelId);
-const { mutate: syncRooms, isPending: isSyncing } = useSyncRooms(hotelId.value);
+const { rooms, isLoadingRooms } = useRooms(hotelId);
+const { syncRooms, isSyncing } = useSyncRooms(hotelId);
 
 const tableHeaders = [
   { title: 'Nome', value: 'name' },

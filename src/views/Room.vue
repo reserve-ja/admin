@@ -80,10 +80,10 @@ const props = defineProps<{ roomId: string }>();
 const roomId = computed(() => props.roomId);
 const { hotelId } = useCurrentHotel();
 
-const { data: rooms, isPending: isLoadingRooms } = useRooms(hotelId);
+const { rooms, isLoadingRooms } = useRooms(hotelId);
 const room = computed(() => rooms.value?.find((room: Room) => room.id === props.roomId));
 
-const { data: rates, isPending: isLoadingRates } = useRoomRates(hotelId, roomId);
+const { rates, isLoadingRates } = useRoomRates(hotelId, roomId);
 
 const ratesHeaders = [
   { title: 'Início', value: 'start' },

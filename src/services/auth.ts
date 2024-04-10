@@ -1,6 +1,8 @@
 import { Session } from '@supabase/supabase-js'
 import { ref } from 'vue'
 import { supabase } from './supabase';
+import { queryClient } from './query';
+import { useCurrentHotel } from './hotel';
 
 const session = ref<Session|null>(null);
 const loadingAuth = ref<boolean>(false);
@@ -13,6 +15,9 @@ export function useAuth() {
       throw error;
     }
 
+    queryClient.clear();
+    const { changeCurrentHotel } = useCurrentHotel();
+    changeCurrentHotel('');
     session.value = null;
   }
 

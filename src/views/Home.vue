@@ -20,10 +20,13 @@
         </v-card>
       </v-col>
     </v-row>
+  <pre class="text-wrap">
+  </pre>
   </v-container>
 </template>
 
 <script setup lang="ts">
+import { useAuth } from '@/services/auth';
 import { useCurrentHotel, useListHotels } from '@/services/hotel';
 import { Hotel } from '@/services/hotel.types';
 import { useRouter } from 'vue-router';
@@ -33,6 +36,7 @@ const router = useRouter();
 const { hotels } = useListHotels();
 const { changeCurrentHotel } = useCurrentHotel();
 
+const { session } = useAuth();
 function changeHotel(hotel: Hotel) {
   changeCurrentHotel(hotel.id);
   router.push({ name: 'Hotel' });

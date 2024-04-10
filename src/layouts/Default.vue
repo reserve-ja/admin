@@ -1,10 +1,8 @@
 <template>
-  <v-app>
-    <app-bar :loading="false"/>
-    <v-main>
-      <router-view />
-    </v-main>
-  </v-app>
+  <app-bar :loading="false"/>
+  <v-main>
+    <router-view />
+  </v-main>
 </template>
 
 <script lang="ts" setup>

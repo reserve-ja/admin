@@ -6,8 +6,8 @@ export const http = axios.create({
   timeout: 2000,
 })
 
-const { session } = useAuth();
 http.interceptors.request.use((config) => {
+  const { session } = useAuth();
   if (session.value) {
     config.headers.Authorization = `Bearer ${session.value.access_token}`;
   }

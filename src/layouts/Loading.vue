@@ -1,10 +1,8 @@
 <template>
-  <v-app>
-    <app-bar loading />
-    <v-main class="ma-4">
-      <PageLoading />
-    </v-main>
-  </v-app>
+  <app-bar loading />
+  <v-main class="ma-4">
+    <PageLoading />
+  </v-main>
 </template>
 
 <script lang="ts" setup>

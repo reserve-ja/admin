@@ -1,3 +1,7 @@
-import { VueQueryPlugin } from '@tanstack/vue-query'
+import { queryClient } from '@/services/query';
+import { VueQueryPlugin, VueQueryPluginOptions } from '@tanstack/vue-query'
 
-export default VueQueryPlugin;
+export const queryPlugin = VueQueryPlugin;
+export const queryOptions: VueQueryPluginOptions = {
+  queryClient: queryClient,
+}

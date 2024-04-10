@@ -2,33 +2,42 @@ import { Ref, ref } from "vue"
 import { http } from "./http";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/vue-query";
 import { Rate, Room } from "./room.types";
+import { queryClient } from "./query";
 
 export function useRooms(hotelId: Ref<string>) {
-  return useQuery<Room[]>({
+  const { data: rooms, isPending: isLoadingRooms } = useQuery<Room[]>({
     queryKey: ['rooms', { hotelId }],
     queryFn: async () => {
-      console.log(hotelId.value);
+      console.log('fetching rooms', hotelId.value);
       if (!hotelId.value) {
+        console.log('vazio')
         return [];
       }
 
       const { data } = await http.get(`/hotels/${hotelId.value}/rooms`);
+      console.log('fetched')
       return data;
     }
-  })
+  });
+
+  return { rooms, isLoadingRooms };
 }
 
-export function useSyncRooms(hotelId: string) {
-  return useMutation({
-    mutationFn: () => http.post(`/hotels/${hotelId}/rooms/import-from-pms`),
+export function useSyncRooms(hotelId: Ref<string>) {
+  const { mutateAsync: syncRooms, isPending: isSyncing } = useMutation({
+    mutationFn: async () => {
+      return http.post(`/hotels/${hotelId.value}/rooms/import-from-pms`);
+    },
     onSuccess: () => {
-      useQueryClient().invalidateQueries({ queryKey: ['rooms', { hotelId }]});
+      queryClient.invalidateQueries({ queryKey: ['rooms', { hotelId: hotelId.value }]});
     },
   });
+
+  return { syncRooms, isSyncing };
 }
 
 export function useRoomRates(hotelId: Ref<string>, roomId: Ref<string>) {
-  return useQuery<Rate[]>({
+  const { data: rates, isPending: isLoadingRates } = useQuery<Rate[]>({
     queryKey: [ 'rates', { hotelId, roomId } ],
     queryFn: async () => {
       if (!hotelId.value || !roomId.value) {
@@ -39,4 +48,8 @@ export function useRoomRates(hotelId: Ref<string>, roomId: Ref<string>) {
       return data;
     }
   });
+
+  return { rates, isLoadingRates };
 }
+
+const sleep = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
