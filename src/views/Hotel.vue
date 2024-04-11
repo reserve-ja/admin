@@ -4,38 +4,51 @@
       <v-btn icon="mdi-dots-vertical" variant="text"></v-btn>
     </template>
     <v-form>
-      <v-text-field
-        :model-value="currentHotel?.name"
-        readonly
-      />
-      <v-select
-        v-model="pms"
-        :items="availablePms"
-        item-title="name"
-        item-value="id"
-      />
-      <div v-if="pms === 'Letoh'">
-        <v-text-field
-          v-model="letohConfig.nrSerie"
-          label="Nr Serie"
-        />
-        <v-text-field
-          v-model="letohConfig.host"
-          label="Host"
-        />
-        <v-text-field
-          v-model="letohConfig.username"
-          label="Username"
-        />
-        <v-text-field
-          v-model="letohConfig.password"
-          label="Password"
-        />
-      </div>
-      <v-btn color="primary" type="submit">Salvar</v-btn>
+      <v-row>
+        <v-col cols="12" md="6" lg="4">
+          <v-text-field
+            :model-value="currentHotel?.name"
+            readonly
+            variant="outlined"
+          />
+          <v-select
+            v-model="pms"
+            :items="availablePms"
+            item-title="name"
+            item-value="id"
+            variant="outlined"
+          />
+          <div v-if="pms === 'Letoh'">
+            <v-text-field
+              v-model="letohConfig.nrSerie"
+              label="Nr. Série"
+              variant="outlined"
+            />
+            <v-text-field
+              v-model="letohConfig.host"
+              label="Host"
+              variant="outlined"
+            />
+            <v-text-field
+              v-model="letohConfig.username"
+              label="Usuário"
+              variant="outlined"
+            />
+            <v-text-field
+              v-model="letohConfig.password"
+              label="Senha"
+              type="password"
+              variant="outlined"
+            />
+          </div>
+          <div class="d-flex">
+            <v-spacer></v-spacer>
+            <v-btn color="primary" type="submit">Salvar</v-btn>
+          </div>
+        </v-col>
+      </v-row>
     </v-form>
-    <div>{{ currentHotel }}</div>
-
+    <!-- <div>{{ currentHotel }}</div> -->
   </Page>
 </template>
 
