@@ -31,7 +31,14 @@
     </v-menu>
   </v-app-bar>
 
-  <v-navigation-drawer v-model="drawer" color="background" floating>
+  <v-navigation-drawer
+    v-model="drawer"
+    color="background"
+    floating
+    mobile-breakpoint="md"
+    width="284"
+    :scrim="false"
+  >
     <div class="ma-3">
       <v-skeleton-loader
         v-if="props.loading"
@@ -42,7 +49,6 @@
         :model-value="currentHotel"
         @update:model-value="changeHotel"
         :items="hotels"
-        density="comfortable"
         variant="outlined"
         hide-details
         prepend-inner-icon="mdi-office-building"
