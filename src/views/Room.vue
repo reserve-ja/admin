@@ -1,7 +1,57 @@
 <template>
   <PageLoading v-if="isLoadingRooms || isLoadingRates" />
-  <div v-else>
-    <v-toolbar flat>
+  <Page :title="room?.name ?? ''" previous-route="/rooms" v-else>
+    <template #actions>
+      <v-btn icon="mdi-heart" color="primary" variant="text"></v-btn>
+      <v-btn icon="mdi-star-outline" variant="text"></v-btn>
+      <v-btn icon="mdi-dots-vertical" variant="text"></v-btn>
+    </template>
+    <v-data-table
+      :items="rates"
+      :headers="ratesHeaders"
+      :loading="isLoadingRates"
+      expand-on-click
+    >
+      <template v-slot:expanded-row="{ columns, item }">
+        <tr>
+          <td :colspan="columns.length">
+            <v-table theme="dark" density="compact">
+              <thead>
+                <tr>
+                  <th class="text-left">
+                    <v-icon size="small">mdi-cash</v-icon>
+                    Método de pagamento
+                  </th>
+                  <th class="text-left">
+                    <v-icon size="small">mdi-account-multiple</v-icon>
+                    Hóspedes
+                  </th>
+                  <th class="text-left">
+                    <v-icon size="small">mdi-currency-usd</v-icon>
+                    Valor (R$)
+                  </th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr
+                  v-for="(price, i) in item.prices.sort((a, b) =>
+                    a.paymentMethod.localeCompare(b.paymentMethod) || a.guests + b.guests)"
+                  :key="`price-${i}`"
+                >
+                  <td>{{ price.paymentMethod }}</td>
+                  <td>{{ price.guests }}</td>
+                  <td>{{ price.value }}</td>
+                </tr>
+              </tbody>
+            </v-table>
+          </td>
+        </tr>
+      </template>
+    </v-data-table>
+  </Page>
+
+
+    <!-- <v-toolbar flat>
       <v-card-title>
         <v-btn to="/rooms" exact icon variant="text">
           <v-icon>
@@ -11,7 +61,7 @@
         {{ room?.name }}
       </v-card-title>
       <v-spacer></v-spacer>
-    </v-toolbar>
+    </v-toolbar> -->
     <!-- <v-card>
       <v-card-text>
         <p>{{ room }}</p>
@@ -19,56 +69,10 @@
       </v-card-text>
     </v-card> -->
 
-    <v-row>
-      <v-col class="mx-5">
-        <v-data-table
-          :items="rates"
-          :headers="ratesHeaders"
-          :loading="isLoadingRates"
-          expand-on-click
-        >
-          <template v-slot:expanded-row="{ columns, item }">
-            <tr>
-              <td :colspan="columns.length">
-                <v-table theme="dark" density="compact">
-                  <thead>
-                    <tr>
-                      <th class="text-left">
-                        <v-icon size="small">mdi-cash</v-icon>
-                        Método de pagamento
-                      </th>
-                      <th class="text-left">
-                        <v-icon size="small">mdi-account-multiple</v-icon>
-                        Hóspedes
-                      </th>
-                      <th class="text-left">
-                        <v-icon size="small">mdi-currency-usd</v-icon>
-                        Valor (R$)
-                      </th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    <tr
-                      v-for="(price, i) in item.prices.sort((a, b) =>
-                        a.paymentMethod.localeCompare(b.paymentMethod) || a.guests + b.guests)"
-                      :key="`price-${i}`"
-                    >
-                      <td>{{ price.paymentMethod }}</td>
-                      <td>{{ price.guests }}</td>
-                      <td>{{ price.value }}</td>
-                    </tr>
-                  </tbody>
-                </v-table>
-              </td>
-            </tr>
-          </template>
-        </v-data-table>
-      </v-col>
-    </v-row>
-  </div>
 </template>
 
 <script setup lang="ts">
+import Page from '@/components/Page.vue';
 import PageLoading from '@/components/PageLoading.vue';
 import { useCurrentHotel } from '@/services/hotel';
 import { useRooms, useRoomRates } from '@/services/room';

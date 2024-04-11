@@ -3,7 +3,6 @@ import { http } from "./http";
 import { Hotel } from "./hotel.types";
 import { useAuth } from "@/services/auth";
 import { ref } from "vue";
-import { queryClient } from "./query";
 
 const hotelId = ref<string>('');
 // const currentHotel = ref<Hotel>({

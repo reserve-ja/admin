@@ -1,46 +1,28 @@
 <template>
-  <v-toolbar flat>
-    <v-card-title>
-      <v-icon
-        icon="mdi-bed"
-        start
-      />
-      Quartos
-    </v-card-title>
-    <v-spacer></v-spacer>
-    <v-btn
-      class="text-none"
-      prepend-icon="mdi-sync"
-      variant="outlined"
-      :loading="isSyncing"
-      :disabled="isSyncing"
-      @click="syncRooms"
+  <Page title="Quartos" icon="mdi-bed">
+    <template #actions>
+      <v-btn icon="mdi-dots-vertical" variant="text"></v-btn>
+    </template>
+    <v-data-table
+      :items="rooms"
+      :headers="tableHeaders"
+      :loading="isLoadingRooms"
     >
-      Sincronizar quartos
-    </v-btn>
-  </v-toolbar>
-  <v-row>
-    <v-col class="mx-5">
-      <v-data-table
-        :items="rooms"
-        :headers="tableHeaders"
-        :loading="isLoadingRooms"
-      >
-        <template v-slot:[`item.name`]="{ item }">
-          <router-link :to="`/rooms/${item.id}`">
-            {{ item.name }}
-          </router-link>
-        </template>
-      </v-data-table>
-    </v-col>
-  </v-row>
-  <pre>
-    {{ isLoadingRooms }}
-  </pre>
-  {{ rooms }}
+      <template v-slot:[`item.name`]="{ item }">
+        <router-link :to="`/rooms/${item.id}`">
+          {{ item.name }}
+        </router-link>
+      </template>
+    </v-data-table>
+    <pre>
+      {{ isLoadingRooms }}
+    </pre>
+    {{ rooms }}
+  </Page>
 </template>
 
 <script setup lang="ts">
+import Page from '@/components/Page.vue'
 import { useCurrentHotel } from '@/services/hotel';
 import { useRooms, useSyncRooms } from '@/services/room';
 

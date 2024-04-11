@@ -1,5 +1,5 @@
 <template>
-  <v-app-bar color="#424242">
+  <v-app-bar color="background" flat>
     <v-app-bar-nav-icon @click="drawer = !drawer"></v-app-bar-nav-icon>
 
     <v-app-bar-title>{{ title }}</v-app-bar-title>
@@ -9,8 +9,10 @@
     <v-menu v-if="!props.loading">
       <template v-slot:activator="{ props }">
         <div v-bind="props" class="mr-5 account-menu">
-          {{ session?.user.email?.split("@")[0] }}
-          <v-avatar color="white" class="ml-2">
+          <span v-if="smAndUp">
+            {{ session?.user.email?.split("@")[0] }}
+          </span>
+          <v-avatar color="primary" class="ml-2">
             {{ session?.user.email?.charAt(0).toUpperCase() }}
           </v-avatar>
         </div>
@@ -29,7 +31,7 @@
     </v-menu>
   </v-app-bar>
 
-  <v-navigation-drawer v-model="drawer" >
+  <v-navigation-drawer v-model="drawer" color="background" floating>
     <div class="ma-3">
       <v-skeleton-loader
         v-if="props.loading"
@@ -58,10 +60,10 @@
         type="list-item"
       />
     </div>
-    <v-list v-else>
-      <v-list-item exact to="/" prepend-icon="mdi-view-dashboard" title="Visão geral" />
-      <v-list-item exact to="/rooms" prepend-icon="mdi-bed" title="Quartos" />
-      <v-list-item exact to="/hotel" prepend-icon="mdi-cog" title="Configurações" />
+    <v-list v-else density="comfortable">
+      <v-list-item exact to="/" prepend-icon="mdi-view-dashboard" title="Visão geral" rounded="xl" class="mx-2" />
+      <v-list-item to="/rooms" prepend-icon="mdi-bed" title="Quartos" rounded="xl" class="mx-2" />
+      <v-list-item exact to="/hotel" prepend-icon="mdi-cog" title="Configurações" rounded="xl" class="mx-2" />
     </v-list>
   </v-navigation-drawer>
 </template>
@@ -72,6 +74,7 @@ import { useAuth } from '@/services/auth'
 import { computed } from 'vue';
 import { useListHotels, useCurrentHotel } from '@/services/hotel';
 import { Hotel } from '@/services/hotel.types';
+import { useDisplay } from 'vuetify';
 
 interface Props {
   loading: boolean
@@ -82,6 +85,8 @@ const props = withDefaults(
 );
 
 const drawer = ref<boolean>();
+
+const { smAndUp } = useDisplay();
 
 const title = computed(() => {
   if (!currentHotel.value?.name) {

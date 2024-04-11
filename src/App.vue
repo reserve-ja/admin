@@ -1,9 +1,9 @@
 <template>
-  <v-app id="inspire">
+  <v-app class="h-screen">
     <div v-if="loadingAuth">
       <Loading />
     </div>
-    <div v-else-if="session">
+    <div v-else-if="session" class="h-100">
       <router-view/>
     </div>
 
