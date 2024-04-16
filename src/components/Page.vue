@@ -23,7 +23,7 @@
       <slot name="actions"></slot>
     </v-toolbar> -->
 
-    <div class="overflow-y-auto h-100 pa-5 pb-10">
+    <div class="overflow-y-auto h-100 px-6 pb-10">
       <div class="mb-10">
         <slot></slot>
       </div>

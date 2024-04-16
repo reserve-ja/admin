@@ -3,6 +3,7 @@ export type Room = {
   hotelId: string,
   externalId: string,
   name: string,
+  description: string,
   capacity: number,
 }
 

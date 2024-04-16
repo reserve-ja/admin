@@ -4,55 +4,60 @@
     <template #actions>
       <v-btn color="primary" @click="addRateDialog = true">Adicionar tarifa</v-btn>
     </template>
-    <v-data-table
-      :items="rates"
-      :headers="ratesHeaders"
-      :loading="isLoadingRates"
-      show-expand
-    >
-      <template v-slot:[`item.actions`]="{ item }">
-        <v-btn
-          icon="mdi-trash-can-outline"
-          variant="text"
-          @click="deleteRate(item)"
-        />
-      </template>
-      <template v-slot:expanded-row="{ columns, item }">
-        <tr>
-          <td :colspan="columns.length">
-            <v-table theme="dark" density="compact">
-              <thead>
-                <tr>
-                  <th class="text-left">
-                    <v-icon size="small">mdi-cash</v-icon>
-                    Método de pagamento
-                  </th>
-                  <th class="text-left">
-                    <v-icon size="small">mdi-account-multiple</v-icon>
-                    Hóspedes
-                  </th>
-                  <th class="text-left">
-                    <v-icon size="small">mdi-currency-usd</v-icon>
-                    Valor (R$)
-                  </th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr
-                  v-for="(price, i) in item.prices.sort((a, b) =>
-                    a.paymentMethod.localeCompare(b.paymentMethod) || a.guests + b.guests)"
-                  :key="`price-${i}`"
-                >
-                  <td>{{ price.paymentMethod }}</td>
-                  <td>{{ price.guests }}</td>
-                  <td>{{ price.amount }}</td>
-                </tr>
-              </tbody>
-            </v-table>
-          </td>
-        </tr>
-      </template>
-    </v-data-table>
+    <template #default>
+      <p class="text-h6 font-weight-regular pt-3">Detalhes</p>
+      <DetailsTable :items="details" />
+      <p class="text-h6 font-weight-regular pt-3">Tarifas</p>
+      <v-data-table
+        :items="rates"
+        :headers="ratesHeaders"
+        :loading="isLoadingRates"
+        show-expand
+      >
+        <template v-slot:[`item.actions`]="{ item }">
+          <v-btn
+            icon="mdi-trash-can-outline"
+            variant="text"
+            @click="deleteRate(item)"
+          />
+        </template>
+        <template v-slot:expanded-row="{ columns, item }">
+          <tr>
+            <td :colspan="columns.length">
+              <v-table theme="dark" density="compact">
+                <thead>
+                  <tr>
+                    <th class="text-left">
+                      <v-icon size="small">mdi-cash</v-icon>
+                      Método de pagamento
+                    </th>
+                    <th class="text-left">
+                      <v-icon size="small">mdi-account-multiple</v-icon>
+                      Hóspedes
+                    </th>
+                    <th class="text-left">
+                      <v-icon size="small">mdi-currency-usd</v-icon>
+                      Valor (R$)
+                    </th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr
+                    v-for="(price, i) in item.prices.sort((a, b) =>
+                      a.paymentMethod.localeCompare(b.paymentMethod) || a.guests + b.guests)"
+                    :key="`price-${i}`"
+                  >
+                    <td>{{ price.paymentMethod }}</td>
+                    <td>{{ price.guests }}</td>
+                    <td>{{ price.amount }}</td>
+                  </tr>
+                </tbody>
+              </v-table>
+            </td>
+          </tr>
+        </template>
+      </v-data-table>
+    </template>
   </Page>
 
   <AddRateDialog v-model="addRateDialog" :room-id="roomId" />
@@ -66,6 +71,7 @@
 <script setup lang="ts">
 import Page from '@/components/Page.vue';
 import PageLoading from '@/components/PageLoading.vue';
+import DetailsTable from '@/components/DetailsTable.vue';
 import AddRateDialog from '@/components/AddRateDialog.vue';
 import RemoveRateDialog from '@/components/RemoveRateDialog.vue';
 import { useCurrentHotel } from '@/services/hotel';
@@ -83,6 +89,12 @@ const { hotelId } = useCurrentHotel();
 
 const { rooms, isLoadingRooms } = useRooms(hotelId);
 const room = computed(() => rooms.value?.find((room: Room) => room.id === props.roomId));
+
+const details = computed(() => [
+  { title: 'Descrição', icon: 'mdi-card-text-outline', value: room.value?.description ?? '' },
+  { title: 'ID PMS', icon: 'mdi-pound-box-outline', value: room.value?.externalId ?? '' },
+  { title: 'Capacidade', icon: 'mdi-account-multiple', value: room.value?.capacity.toString() ?? '' },
+]);
 
 const { rates, isLoadingRates } = useRoomRates(hotelId, roomId);
 
