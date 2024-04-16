@@ -26,7 +26,6 @@
 </template>
 
 <script setup lang="ts">
-import { useAuth } from '@/services/auth';
 import { useCurrentHotel, useListHotels } from '@/services/hotel';
 import { Hotel } from '@/services/hotel.types';
 import { useRouter } from 'vue-router';
@@ -36,9 +35,8 @@ const router = useRouter();
 const { hotels } = useListHotels();
 const { changeCurrentHotel } = useCurrentHotel();
 
-const { session } = useAuth();
 function changeHotel(hotel: Hotel) {
   changeCurrentHotel(hotel.id);
-  router.push({ name: 'Hotel' });
+  router.push({ name: 'HotelDetails' });
 }
 </script>
