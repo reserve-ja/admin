@@ -8,14 +8,12 @@
             <v-form @submit.prevent="handleLogin">
               <v-text-field
                 v-model="email"
-                variant="outlined"
                 label="Email"
               />
               <v-text-field
                 v-model="password"
                 :type="showPassword ? 'text' : 'password'"
                 :append-inner-icon="showPassword ? 'mdi-eye-outline' : 'mdi-eye-off-outline'"
-                variant="outlined"
                 label="Senha"
                 @click:append-inner="showPassword = !showPassword"
               />

@@ -1,8 +1,9 @@
 import { Ref, ref } from "vue"
 import { http } from "./http";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/vue-query";
-import { Rate, Room } from "./room.types";
+import { Rate, RatePrice, Room } from "./room.types";
 import { queryClient } from "./query";
+import { useDate } from "vuetify/lib/framework.mjs";
 
 export function useRooms(hotelId: Ref<string>) {
   const { data: rooms, isPending: isLoadingRooms } = useQuery<Room[]>({
@@ -50,6 +51,64 @@ export function useRoomRates(hotelId: Ref<string>, roomId: Ref<string>) {
   });
 
   return { rates, isLoadingRates };
+}
+
+export function useAddRate() {
+  const { mutateAsync: addRate, isPending: isLoadingAddRate } = useMutation({
+    mutationFn: async (input: {
+      hotelId: string,
+      roomId: string,
+      start: Date,
+      end: Date,
+      defaultPrice: number,
+      prices: RatePrice[],
+     }) => {
+      const { hotelId, roomId } = input;
+
+      const { data } = await http.post(`/hotels/${hotelId}/rooms/${roomId}/rates`, {
+        start: input.start.toISOString().substring(0, 10),
+        end: input.end.toISOString().substring(0, 10),
+        defaultPrice: input.defaultPrice,
+        prices: input.prices,
+      });
+
+      return data;
+    },
+    onSuccess: (data, variables) => {
+      queryClient.invalidateQueries({
+        queryKey: [ 'rates', { hotelId: variables.hotelId, roomId: variables.roomId } ],
+        exact: true,
+        refetchType: "all",
+      });
+    },
+  });
+
+  return { addRate, isLoadingAddRate };
+}
+
+export function useRemoveRate() {
+  const { mutateAsync: removeRate, isPending: isLoadingRemoveRate } = useMutation({
+    mutationFn: async (input: {
+      hotelId: string,
+      roomId: string,
+      rateId: string,
+     }) => {
+      const { hotelId, roomId, rateId } = input;
+
+      const { data } = await http.delete(`/hotels/${hotelId}/rooms/${roomId}/rates/${rateId}`);
+
+      return data;
+    },
+    onSuccess: (data, variables) => {
+      queryClient.invalidateQueries({
+        queryKey: [ 'rates', { hotelId: variables.hotelId, roomId: variables.roomId } ],
+        exact: true,
+        refetchType: "all",
+      });
+    },
+  });
+
+  return { removeRate, isLoadingRemoveRate };
 }
 
 const sleep = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));

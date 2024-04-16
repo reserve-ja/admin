@@ -18,11 +18,13 @@ interface LetohHotel extends BaseHotel {
   configuration: LetohConfig,
 }
 
-export type NoneConfig = {};
+export type PmsConfig = NoneConfig | LetohConfig;
 
-export type LetohConfig = {
-  nrSerie: string,
-  host: string,
-  username: string,
-  password: string,
+export class NoneConfig {}
+
+export class LetohConfig {
+  nrSerie: string = '';
+  host: string = '';
+  username: string = '';
+  password: string = '';
 }

@@ -1,12 +1,13 @@
 <template>
   <Page title="Quartos" icon="mdi-bed">
     <template #actions>
-      <v-btn icon="mdi-dots-vertical" variant="text"></v-btn>
+      <v-btn variant="outlined" @click="syncRooms" :loading="isSyncing">Sincronizar com PMS</v-btn>
     </template>
     <v-data-table
       :items="rooms"
       :headers="tableHeaders"
       :loading="isLoadingRooms"
+      @click="console.log('click')"
     >
       <template v-slot:[`item.name`]="{ item }">
         <router-link :to="`/rooms/${item.id}`">
@@ -14,10 +15,6 @@
         </router-link>
       </template>
     </v-data-table>
-    <pre>
-      {{ isLoadingRooms }}
-    </pre>
-    {{ rooms }}
   </Page>
 </template>
 

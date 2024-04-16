@@ -2,16 +2,21 @@
   <PageLoading v-if="isLoadingRooms || isLoadingRates" />
   <Page :title="room?.name ?? ''" previous-route="/rooms" v-else>
     <template #actions>
-      <v-btn icon="mdi-heart" color="primary" variant="text"></v-btn>
-      <v-btn icon="mdi-star-outline" variant="text"></v-btn>
-      <v-btn icon="mdi-dots-vertical" variant="text"></v-btn>
+      <v-btn color="primary" @click="addRateDialog = true">Adicionar tarifa</v-btn>
     </template>
     <v-data-table
       :items="rates"
       :headers="ratesHeaders"
       :loading="isLoadingRates"
-      expand-on-click
+      show-expand
     >
+      <template v-slot:[`item.actions`]="{ item }">
+        <v-btn
+          icon="mdi-trash-can-outline"
+          variant="text"
+          @click="deleteRate(item)"
+        />
+      </template>
       <template v-slot:expanded-row="{ columns, item }">
         <tr>
           <td :colspan="columns.length">
@@ -40,7 +45,7 @@
                 >
                   <td>{{ price.paymentMethod }}</td>
                   <td>{{ price.guests }}</td>
-                  <td>{{ price.value }}</td>
+                  <td>{{ price.amount }}</td>
                 </tr>
               </tbody>
             </v-table>
@@ -50,36 +55,28 @@
     </v-data-table>
   </Page>
 
-
-    <!-- <v-toolbar flat>
-      <v-card-title>
-        <v-btn to="/rooms" exact icon variant="text">
-          <v-icon>
-            mdi-arrow-left
-          </v-icon>
-        </v-btn>
-        {{ room?.name }}
-      </v-card-title>
-      <v-spacer></v-spacer>
-    </v-toolbar> -->
-    <!-- <v-card>
-      <v-card-text>
-        <p>{{ room }}</p>
-        <p>{{ rates }}</p>
-      </v-card-text>
-    </v-card> -->
-
+  <AddRateDialog v-model="addRateDialog" :room-id="roomId" />
+  <RemoveRateDialog
+    v-model="deleteRateDialog"
+    :hotel-id="deleteRateHotelId"
+    :room-id="deleteRateRoomId"
+    :rate-id="deleteRateRateId" />
 </template>
 
 <script setup lang="ts">
 import Page from '@/components/Page.vue';
 import PageLoading from '@/components/PageLoading.vue';
+import AddRateDialog from '@/components/AddRateDialog.vue';
+import RemoveRateDialog from '@/components/RemoveRateDialog.vue';
 import { useCurrentHotel } from '@/services/hotel';
 import { useRooms, useRoomRates } from '@/services/room';
-import { Room } from '@/services/room.types';
+import { Room, Rate } from '@/services/room.types';
+import { ref } from 'vue';
 import { computed } from 'vue';
 
 const props = defineProps<{ roomId: string }>();
+
+const addRateDialog = ref<boolean>(false);
 
 const roomId = computed(() => props.roomId);
 const { hotelId } = useCurrentHotel();
@@ -93,5 +90,17 @@ const ratesHeaders = [
   { title: 'Início', value: 'start' },
   { title: 'Fim', value: 'end' },
   { title: 'Preço padrão (R$)', value: 'defaultPrice' },
+  { title: 'Ações', value: 'actions', sortable: false },
 ];
+
+const deleteRateDialog = ref<boolean>(false);
+const deleteRateHotelId = ref<string>('');
+const deleteRateRoomId = ref<string>('');
+const deleteRateRateId = ref<string>('');
+function deleteRate(item: Rate) {
+  deleteRateHotelId.value = hotelId.value;
+  deleteRateRoomId.value = roomId.value;
+  deleteRateRateId.value = item.id;
+  deleteRateDialog.value = true;
+}
 </script>

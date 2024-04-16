@@ -2,9 +2,9 @@
   <v-app-bar color="background" flat>
     <v-app-bar-nav-icon @click="drawer = !drawer"></v-app-bar-nav-icon>
 
-    <v-app-bar-title>{{ title }}</v-app-bar-title>
-
-    <v-spacer />
+    <v-app-bar-title>
+      {{ title }}
+    </v-app-bar-title>
 
     <v-menu v-if="!props.loading">
       <template v-slot:activator="{ props }">
@@ -49,9 +49,7 @@
         :model-value="currentHotel"
         @update:model-value="changeHotel"
         :items="hotels"
-        variant="outlined"
         hide-details
-        prepend-inner-icon="mdi-office-building"
         item-title="name"
         item-value="id"
         return-object
@@ -67,9 +65,9 @@
       />
     </div>
     <v-list v-else density="comfortable">
-      <v-list-item exact to="/" prepend-icon="mdi-view-dashboard" title="Visão geral" rounded="xl" class="mx-2" />
-      <v-list-item to="/rooms" prepend-icon="mdi-bed" title="Quartos" rounded="xl" class="mx-2" />
-      <v-list-item exact to="/hotel" prepend-icon="mdi-cog" title="Configurações" rounded="xl" class="mx-2" />
+      <v-list-item exact to="/" prepend-icon="mdi-view-dashboard-outline" title="Visão geral" rounded="xl" class="mx-2" />
+      <v-list-item to="/hotel" prepend-icon="mdi-office-building-outline" title="Hotel" rounded="xl" class="mx-2" />
+      <v-list-item to="/rooms" prepend-icon="mdi-bed-outline" title="Quartos" rounded="xl" class="mx-2" />
     </v-list>
   </v-navigation-drawer>
 </template>
@@ -99,7 +97,7 @@ const title = computed(() => {
     return "M.B.E.";
   }
 
-  return `M.B.E. — ${currentHotel.value?.name}`
+  return currentHotel.value?.name;
 });
 
 const { hotels } = useListHotels();

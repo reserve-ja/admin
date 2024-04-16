@@ -39,7 +39,7 @@ export function useAuth() {
 
     supabase.auth.getSession();
     supabase.auth.onAuthStateChange(async (_, _session) => {
-      if (_session != null && _session.user.id != session.value?.user.id) {
+      if (_session != null) {
         session.value = _session;
       }
 

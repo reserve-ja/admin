@@ -6,14 +6,11 @@ const routes = [
     component: () => import('@/layouts/Default.vue'),
     children: [
       { path: '', name: 'Home',  component: () => import('@/views/Home.vue') },
-      {
-        path: '/hotel',
-        children: [
-          { path: '',               name: 'Hotel', component: () => import('@/views/Hotel.vue') },
-          { path: '/rooms',         name: 'Rooms', component: () => import('@/views/Rooms.vue') },
-          { path: '/rooms/:roomId', name: 'Room',  component: () => import('@/views/Room.vue'), props: true },
-        ],
-      },
+      { path: 'hotel', name: 'HotelDetails', component: () => import('@/views/HotelDetails.vue')},
+      { path: 'hotel/edit', name: 'HotelEdit', component: () => import('@/views/HotelEdit.vue') },
+      { path: 'hotel/edit-pms-config', name: 'HotelEditPmsConfig', component: () => import('@/views/HotelEditPmsConfig.vue') },
+      { path: 'rooms',         name: 'Rooms', component: () => import('@/views/Rooms.vue') },
+      { path: 'rooms/:roomId', name: 'Room',  component: () => import('@/views/Room.vue'), props: true },
     ],
   },
 ]

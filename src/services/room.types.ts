@@ -12,9 +12,11 @@ export type Rate = {
   defaultPrice: number,
   start: string,
   end: string,
-  prices: {
-    value: number,
-    guests: number,
-    paymentMethod: string,
-  }[],
+  prices: RatePrice[],
+}
+
+export type RatePrice = {
+  amount: number,
+  guests: number,
+  paymentMethod: string,
 }
