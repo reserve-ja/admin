@@ -19,9 +19,9 @@ export function useUser() {
       return false;
     }
 
-    // if (isSuperAdmin.value === true) {
-    //   return true;
-    // }
+    if (isSuperAdmin.value === true) {
+      return true;
+    }
 
     return user.value?.permissionsByHotel[hotelId]?.includes(permission) ?? false;
   });
