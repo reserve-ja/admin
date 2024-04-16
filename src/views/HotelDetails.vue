@@ -1,10 +1,21 @@
 <template>
   <Page title="Hotel">
     <template #actions>
-      <v-btn variant="flat" color="primary" class="text-none mx-1" :to="{ name: 'HotelEdit' }">Editar</v-btn>
-      <v-btn variant="outlined" class="text-none mx-1" :to="{ name: 'HotelEditPmsConfig' }">
-        Configurar PMS
-      </v-btn>
+      <v-btn
+        v-if="hasPermission(currentHotel?.id, 'hotel.write')"
+        variant="flat"
+        color="primary"
+        class="text-none mx-1"
+        :to="{ name: 'HotelEdit' }"
+        text="Editar"
+      />
+      <v-btn
+        v-if="hasPermission(currentHotel?.id, 'hotel.write')"
+        variant="outlined"
+        class="text-none mx-1"
+        :to="{ name: 'HotelEditPmsConfig' }"
+        text="Configurar PMS"
+      />
     </template>
     <template #default>
       <v-row>
@@ -37,10 +48,13 @@
 <script setup lang="ts">
 import Page from '@/components/Page.vue';
 import { useCurrentHotel, useListHotels } from '@/services/hotel';
+import { useUser } from '@/services/user';
 import { computed } from 'vue';
 
 const { hotels } = useListHotels();
 const { hotelId } = useCurrentHotel();
 
 const currentHotel = computed(() => hotels.value?.find(hotel => hotel.id === hotelId.value));
+
+const { user, isSuperAdmin, hasPermission } = useUser();
 </script>

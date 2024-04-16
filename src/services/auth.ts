@@ -3,6 +3,7 @@ import { ref } from 'vue'
 import { supabase } from './supabase';
 import { queryClient } from './query';
 import { useCurrentHotel } from './hotel';
+import { useUser } from './user';
 
 const session = ref<Session|null>(null);
 const loadingAuth = ref<boolean>(false);
@@ -18,6 +19,7 @@ export function useAuth() {
     queryClient.clear();
     const { changeCurrentHotel } = useCurrentHotel();
     changeCurrentHotel('');
+    useUser().clearUser();
     session.value = null;
   }
 
@@ -41,6 +43,7 @@ export function useAuth() {
     supabase.auth.onAuthStateChange(async (_, _session) => {
       if (_session != null) {
         session.value = _session;
+        useUser().fetchUser();
       }
 
       loadingAuth.value = false;
