@@ -8,8 +8,10 @@
             :key="i"
           >
             <td class="text-medium-emphasis">
-              <v-icon start>{{ item.icon }}</v-icon>
-              {{ item.title }}
+              <span class="d-flex">
+                <v-icon start>{{ item.icon }}</v-icon>
+                {{ item.title }}
+              </span>
             </td>
             <td>{{ item.value }}</td>
           </tr>

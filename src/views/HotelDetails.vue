@@ -5,15 +5,14 @@
         v-if="hasPermission(currentHotel?.id, 'hotel.write')"
         variant="flat"
         color="primary"
-        class="text-n
-        one mx-1"
+        class="mx-1"
         :to="{ name: 'HotelEdit' }"
         text="Editar"
       />
       <v-btn
         v-if="hasPermission(currentHotel?.id, 'hotel.write')"
         variant="outlined"
-        class="text-none mx-1"
+        class="mx-1"
         :to="{ name: 'HotelEditPmsConfig' }"
         text="Configurar PMS"
       />

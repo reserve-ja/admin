@@ -53,6 +53,34 @@ export function useRoomRates(hotelId: Ref<string>, roomId: Ref<string>) {
   return { rates, isLoadingRates };
 }
 
+export function useEditRoomDetails() {
+  const { mutateAsync: editRoomDetails, isPending: isLoadingEditRoomDetails } = useMutation({
+    mutationFn: async (input: {
+      hotelId: string,
+      roomId: string,
+      name: string,
+      description: string,
+     }) => {
+      const { hotelId, roomId } = input;
+
+      const { data } = await http.patch(`/hotels/${hotelId}/rooms/${roomId}`, {
+        name: input.name,
+        description: input.description,
+      });
+
+      return data;
+    },
+    onSuccess: (data, variables) => {
+      queryClient.invalidateQueries({
+        queryKey: [ 'rooms', { hotelId: variables.hotelId } ],
+        exact: true,
+      });
+    },
+  });
+
+  return { editRoomDetails, isLoadingEditRoomDetails };
+}
+
 export function useAddRate() {
   const { mutateAsync: addRate, isPending: isLoadingAddRate } = useMutation({
     mutationFn: async (input: {

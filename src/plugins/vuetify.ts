@@ -46,10 +46,12 @@ export default createVuetify({
     VAutocomplete: {
       variant: 'outlined',
     },
+    VTextarea: {
+      variant: 'outlined',
+    },
     VNumberInput: {
       variant: 'outlined',
       inset: true,
-      // controlVariant: 'split',
     }
   },
   blueprint: md3,

@@ -2,11 +2,22 @@
   <PageLoading v-if="isLoadingRooms || isLoadingRates" />
   <Page :title="room?.name ?? ''" previous-route="/rooms" v-else>
     <template #actions>
-      <v-btn color="primary" @click="addRateDialog = true">Adicionar tarifa</v-btn>
+      <v-btn
+        variant="outlined"
+        text="Editar"
+        class="mx-1"
+        @click="editDetailsDialog = true"
+      />
+      <v-btn
+        text="Adicionar tarifa"
+        class="mx-1"
+        @click="addRateDialog = true"
+      />
     </template>
     <template #default>
       <p class="text-h6 font-weight-regular pt-3">Detalhes</p>
       <DetailsTable :items="details" />
+
       <p class="text-h6 font-weight-regular pt-3">Tarifas</p>
       <v-data-table
         :items="rates"
@@ -60,6 +71,7 @@
     </template>
   </Page>
 
+  <RoomDetailsEditDialog v-model="editDetailsDialog" :room-id="roomId" />
   <AddRateDialog v-model="addRateDialog" :room-id="roomId" />
   <RemoveRateDialog
     v-model="deleteRateDialog"
@@ -72,6 +84,7 @@
 import Page from '@/components/Page.vue';
 import PageLoading from '@/components/PageLoading.vue';
 import DetailsTable from '@/components/DetailsTable.vue';
+import RoomDetailsEditDialog from '@/components/RoomDetailsEditDialog.vue';
 import AddRateDialog from '@/components/AddRateDialog.vue';
 import RemoveRateDialog from '@/components/RemoveRateDialog.vue';
 import { useCurrentHotel } from '@/services/hotel';
@@ -83,6 +96,7 @@ import { computed } from 'vue';
 const props = defineProps<{ roomId: string }>();
 
 const addRateDialog = ref<boolean>(false);
+const editDetailsDialog = ref<boolean>(false);
 
 const roomId = computed(() => props.roomId);
 const { hotelId } = useCurrentHotel();
@@ -93,7 +107,7 @@ const room = computed(() => rooms.value?.find((room: Room) => room.id === props.
 const details = computed(() => [
   { title: 'Descrição', icon: 'mdi-card-text-outline', value: room.value?.description ?? '' },
   { title: 'ID PMS', icon: 'mdi-pound-box-outline', value: room.value?.externalId ?? '' },
-  { title: 'Capacidade', icon: 'mdi-account-multiple', value: room.value?.capacity.toString() ?? '' },
+  { title: 'Capacidade', icon: 'mdi-account-multiple-outline', value: room.value?.capacity.toString() ?? '' },
 ]);
 
 const { rates, isLoadingRates } = useRoomRates(hotelId, roomId);
