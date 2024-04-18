@@ -12,6 +12,12 @@ const routes = [
       { path: 'rooms',         name: 'Rooms', component: () => import('@/views/Rooms.vue') },
       { path: 'rooms/:roomId', name: 'Room',  component: () => import('@/views/Room.vue'), props: true },
       { path: 'bookings', name: 'Bookings',  component: () => import('@/views/Bookings.vue') },
+      {
+        path: 'hotels/:hotelId/bookings/:bookingId',
+        name: 'BookingDetails',
+        props: true,
+        component: () => import('@/views/BookingDetails.vue')
+      },
     ],
   },
 ]

@@ -15,8 +15,12 @@
       />
     </template>
     <template #default>
-      <p class="text-h6 font-weight-regular pt-3">Detalhes</p>
-      <DetailsTable :items="details" />
+      <v-row>
+        <v-col cols="12" md="6">
+          <p class="text-h6 font-weight-regular pt-3">Detalhes</p>
+          <DetailsTable :items="details" />
+        </v-col>
+      </v-row>
 
       <p class="text-h6 font-weight-regular pt-3">Tarifas</p>
       <v-data-table

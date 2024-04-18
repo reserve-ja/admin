@@ -1,4 +1,21 @@
+import { Ref } from "vue";
 import { http } from "./http";
+import { useQuery } from "@tanstack/vue-query";
+
+export function useBookingDetails(hotelId: Ref<string>, bookingId: Ref<string>) {
+  const { data: booking, isPending: isLoadingBooking } = useQuery<Booking>({
+    queryKey: ['booking', { hotelId: hotelId.value, bookingId: bookingId.value }],
+    queryFn: async () => {
+      console.log('fetching booking', bookingId.value);
+
+      const { data } = await http.get(`/hotels/${hotelId.value}/bookings/${bookingId.value}`);
+      console.log('fetched booking', bookingId.value);
+      return data;
+    }
+  });
+
+  return { booking, isLoadingBooking };
+}
 
 export async function searchBookings(
   hotelId: string,
@@ -50,7 +67,7 @@ export function allStatus(): BookingStatus[] {
   return Object.values(BookingStatus);
 }
 
-export function translateStatus(status: BookingStatus) {
+export function translateStatus(status?: BookingStatus) {
   switch (status) {
     case BookingStatus.WaitingPreBook:
       return "Aguardando Pré-Reserva";
@@ -62,6 +79,8 @@ export function translateStatus(status: BookingStatus) {
       return "Reservado";
     case BookingStatus.Canceled:
       return "Cancelado";
+    default:
+      return '';
   }
 }
 
@@ -76,4 +95,11 @@ export type BookingRoom = {
   roomId: string,
   totalGuests: number,
   totalPrice: number,
+  priceDetails: PriceDetails[],
+}
+
+export type PriceDetails = {
+  start: string,
+  end: string,
+  pricePerNight: number
 }

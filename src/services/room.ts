@@ -1,9 +1,8 @@
-import { Ref, ref } from "vue"
+import { Ref, computed } from "vue"
 import { http } from "./http";
-import { useMutation, useQuery, useQueryClient } from "@tanstack/vue-query";
+import { useMutation, useQuery } from "@tanstack/vue-query";
 import { Rate, RatePrice, Room } from "./room.types";
 import { queryClient } from "./query";
-import { useDate } from "vuetify/lib/framework.mjs";
 
 export function useRooms(hotelId: Ref<string>) {
   const { data: rooms, isPending: isLoadingRooms } = useQuery<Room[]>({
@@ -21,7 +20,11 @@ export function useRooms(hotelId: Ref<string>) {
     }
   });
 
-  return { rooms, isLoadingRooms };
+  const roomName = computed(() => (roomId: string) => {
+    return rooms.value?.find(r => r.id === roomId)?.name ?? '';
+  });
+
+  return { rooms, isLoadingRooms, roomName };
 }
 
 export function useSyncRooms(hotelId: Ref<string>) {

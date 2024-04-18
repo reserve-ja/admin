@@ -26,7 +26,7 @@
     </div>
     <v-data-table :loading="isLoadingBookings" :items="items" :headers="headers">
       <template v-slot:[`item.id`]="{ item }">
-        <router-link :to="`/bookings/${item.id}`">
+        <router-link :to="`hotels/${hotelId}/bookings/${item.id}`">
           {{ item.id.substring(0, 8) }}
         </router-link>
       </template>
@@ -59,6 +59,8 @@ const items = computed(() => bookings.value.map(b => ({
   totalGuests: b.rooms.reduce((acc, r) => acc + r.totalGuests, 0),
   totalPrice: b.rooms.reduce((acc, r) => acc + r.totalPrice, 0),
 })));
+
+const { hotelId } = useCurrentHotel();
 
 const headers = [
   { title: 'ID', value: 'id' },

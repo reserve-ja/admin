@@ -1,24 +1,20 @@
 <template>
-  <v-row>
-    <v-col cols="12" md="6" lg="4">
-      <v-table>
-        <tbody>
-          <tr
-            v-for="(item, i) in items"
-            :key="i"
-          >
-            <td class="text-medium-emphasis">
-              <span class="d-flex">
-                <v-icon start>{{ item.icon }}</v-icon>
-                {{ item.title }}
-              </span>
-            </td>
-            <td>{{ item.value }}</td>
-          </tr>
-        </tbody>
-      </v-table>
-    </v-col>
-  </v-row>
+  <v-table>
+    <tbody>
+      <tr
+        v-for="(item, i) in items"
+        :key="i"
+      >
+        <td class="text-medium-emphasis">
+          <span class="d-flex">
+            <v-icon start>{{ item.icon }}</v-icon>
+            {{ item.title }}
+          </span>
+        </td>
+        <td>{{ item.value }}</td>
+      </tr>
+    </tbody>
+  </v-table>
 </template>
 
 <script setup lang="ts">
