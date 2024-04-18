@@ -1,0 +1,79 @@
+import { http } from "./http";
+
+export async function searchBookings(
+  hotelId: string,
+  checkinFrom?: Date,
+  checkinTo?: Date,
+  paymentMethod?: PaymentMethod,
+  status?: BookingStatus,
+) {
+  const params: {
+    checkinFrom?: string,
+    checkinTo?: string,
+    paymentMethod?: PaymentMethod,
+    status?: BookingStatus,
+  } = {};
+
+  if (checkinFrom) params.checkinFrom = checkinFrom.toISOString().substring(0, 10);
+  if (checkinTo) params.checkinTo = checkinTo.toISOString().substring(0, 10);
+  if (paymentMethod) params.paymentMethod = paymentMethod;
+  if (status) params.status = status;
+
+  const { data } = await http.get<Booking[]>(`/hotels/${hotelId}/bookings`, { params });
+
+  return data;
+}
+
+export type Booking = {
+  id: string,
+  checkin: string,
+  checkout: string,
+  paymentMethod: PaymentMethod,
+  status: BookingStatus,
+  mainGuest: Person,
+  rooms: BookingRoom[],
+}
+
+export enum PaymentMethod {
+  Pix = "Pix",
+}
+
+export enum BookingStatus {
+  WaitingPreBook = "WaitingPreBook",
+  PreBooked = "PreBooked",
+  WaitingPayment = "WaitingPayment",
+  Booked = "Booked",
+  Canceled = "Canceled",
+}
+
+export function allStatus(): BookingStatus[] {
+  return Object.values(BookingStatus);
+}
+
+export function translateStatus(status: BookingStatus) {
+  switch (status) {
+    case BookingStatus.WaitingPreBook:
+      return "Aguardando Pré-Reserva";
+    case BookingStatus.PreBooked:
+      return "Pré-Reservado";
+    case BookingStatus.WaitingPayment:
+      return "Aguardando Pagamento";
+    case BookingStatus.Booked:
+      return "Reservado";
+    case BookingStatus.Canceled:
+      return "Cancelado";
+  }
+}
+
+export type Person = {
+  fullName: string,
+  email: string,
+  phone: string,
+  document: string,
+}
+
+export type BookingRoom = {
+  roomId: string,
+  totalGuests: number,
+  totalPrice: number,
+}

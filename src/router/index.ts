@@ -11,6 +11,7 @@ const routes = [
       { path: 'hotel/edit-pms-config', name: 'HotelEditPmsConfig', component: () => import('@/views/HotelEditPmsConfig.vue') },
       { path: 'rooms',         name: 'Rooms', component: () => import('@/views/Rooms.vue') },
       { path: 'rooms/:roomId', name: 'Room',  component: () => import('@/views/Room.vue'), props: true },
+      { path: 'bookings', name: 'Bookings',  component: () => import('@/views/Bookings.vue') },
     ],
   },
 ]

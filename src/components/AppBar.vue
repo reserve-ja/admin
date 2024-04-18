@@ -68,6 +68,7 @@
       <v-list-item exact to="/" prepend-icon="mdi-view-dashboard-outline" title="Visão geral" rounded="xl" class="mx-2" />
       <v-list-item to="/hotel" prepend-icon="mdi-office-building-outline" title="Hotel" rounded="xl" class="mx-2" />
       <v-list-item to="/rooms" prepend-icon="mdi-bed-outline" title="Quartos" rounded="xl" class="mx-2" />
+      <v-list-item to="/bookings" prepend-icon="mdi-calendar-check-outline" title="Reservas" rounded="xl" class="mx-2" />
     </v-list>
   </v-navigation-drawer>
 </template>
