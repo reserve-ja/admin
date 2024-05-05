@@ -8,6 +8,7 @@
     </div>
 
     <Auth v-else />
+    <ErrorSnackbar />
   </v-app>
 </template>
 
@@ -15,6 +16,7 @@
 import { onMounted } from 'vue'
 import Auth from './views/Auth.vue'
 import Loading from '@/layouts/Loading.vue'
+import ErrorSnackbar from '@/components/ErrorSnackbar.vue'
 import { useAuth } from './services/auth'
 
 const { session, loadingAuth, initAuth } = useAuth();

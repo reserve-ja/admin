@@ -1,6 +1,7 @@
 import { Ref } from "vue";
 import { http } from "./http";
 import { useQuery } from "@tanstack/vue-query";
+import { PaymentMethod } from "./payment.types";
 
 export function useBookingDetails(hotelId: Ref<string>, bookingId: Ref<string>) {
   const { data: booking, isPending: isLoadingBooking } = useQuery<Booking>({
@@ -49,10 +50,6 @@ export type Booking = {
   status: BookingStatus,
   mainGuest: Person,
   rooms: BookingRoom[],
-}
-
-export enum PaymentMethod {
-  Pix = "Pix",
 }
 
 export enum BookingStatus {

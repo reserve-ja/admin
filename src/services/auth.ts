@@ -40,9 +40,9 @@ export function useAuth() {
     loadingAuth.value = true;
 
     supabase.auth.getSession();
-    supabase.auth.onAuthStateChange(async (_, _session) => {
-      if (_session != null) {
-        session.value = _session;
+    supabase.auth.onAuthStateChange(async (event, supabaseSession) => {
+      if (supabaseSession != null) {
+        session.value = supabaseSession;
         useUser().fetchUser();
       }
 
