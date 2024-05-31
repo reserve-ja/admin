@@ -13,7 +13,7 @@
         <v-col cols="12" md="6">
           <v-select
             :model-value="gateway.type"
-            :items="[GatewayType.PixApi]"
+            :items="[GatewayType.ApiPix, GatewayType.OpenPix]"
             label="Tipo"
             prepend-icon="mdi-label-outline"
             disabled
@@ -27,9 +27,11 @@
             prepend-icon="mdi-cash"
           />
         </v-col>
+      </v-row>
+      <v-row v-if="gateway.type === GatewayType.ApiPix">
         <v-col cols="12" md="6">
           <v-text-field
-            v-model="newConfiguration.expirationInMinutes"
+            v-model.number="newApiPixConfig.expirationInMinutes"
             prepend-icon="mdi-clock-outline"
             label="Expiração QR Code"
             suffix="minutos"
@@ -40,7 +42,7 @@
         </v-col>
         <v-col cols="12" md="6">
           <v-text-field
-            v-model="newConfiguration.pixKey"
+            v-model="newApiPixConfig.pixKey"
             label="Chave PIX"
             prepend-icon="mdi-key-outline"
             :rules="[v => !!v || 'Chave PIX é obrigatório']"
@@ -48,7 +50,7 @@
         </v-col>
         <v-col cols="12" md="6">
           <v-text-field
-            v-model="newConfiguration.baseUrl"
+            v-model="newApiPixConfig.baseUrl"
             label="Host"
             prepend-icon="mdi-link"
             :rules="[v => !!v || 'Host é obrigatório']"
@@ -56,7 +58,7 @@
         </v-col>
         <v-col cols="12" md="6">
           <v-text-field
-            v-model="newConfiguration.authUrl"
+            v-model="newApiPixConfig.authUrl"
             label="Host autenticação"
             prepend-icon="mdi-link-lock"
             :rules="[v => !!v || 'Host autenticação é obrigatório']"
@@ -64,7 +66,7 @@
         </v-col>
         <v-col cols="12" md="6">
           <v-text-field
-            v-model="newConfiguration.clientId"
+            v-model="newApiPixConfig.clientId"
             label="Client ID"
             prepend-icon="mdi-identifier"
             :rules="[v => !!v || 'Client ID é obrigatório']"
@@ -72,10 +74,31 @@
         </v-col>
         <v-col cols="12" md="6">
           <v-text-field
-            v-model="newConfiguration.clientSecret"
+            v-model="newApiPixConfig.clientSecret"
             label="Client secret"
             prepend-icon="mdi-form-textbox-password"
             :rules="[v => !!v || 'Client secret é obrigatório']"
+          />
+        </v-col>
+      </v-row>
+      <v-row v-if="gateway.type === GatewayType.OpenPix">
+        <v-col cols="12" md="6">
+          <v-text-field
+            v-model.number="newOpenPixConfig.expirationInMinutes"
+            prepend-icon="mdi-clock-outline"
+            label="Expiração QR Code"
+            suffix="minutos"
+            type="number"
+            min="15"
+            max="60"
+          />
+        </v-col>
+        <v-col cols="12" md="6">
+          <v-text-field
+            v-model="newOpenPixConfig.appId"
+            label="AppId"
+            prepend-icon="mdi-key-outline"
+            :rules="[v => !!v || 'AppId é obrigatório']"
           />
         </v-col>
       </v-row>
@@ -101,7 +124,7 @@
 import Dialog from '@/components/Dialog.vue';
 import { useCurrentHotel } from '@/services/hotel';
 import { useEditGateway } from '@/services/payment';
-import { PixApiConfig, GatewayConfig, Gateway, GatewayType, PaymentMethod } from '@/services/payment.types';
+import { ApiPixConfig, Gateway, GatewayType, PaymentMethod, OpenPixConfig } from '@/services/payment.types';
 import { ref, watchEffect } from 'vue';
 
 const model = defineModel<boolean>({ required: true });
@@ -111,7 +134,8 @@ const { hotelId } = useCurrentHotel();
 const form = ref();
 const newName = ref<string>(props.gateway.name);
 const newMethod = ref<PaymentMethod>(PaymentMethod.Pix);
-const newConfiguration = ref<GatewayConfig>(new PixApiConfig());
+const newApiPixConfig = ref<ApiPixConfig>(new ApiPixConfig());
+const newOpenPixConfig = ref<OpenPixConfig>(new OpenPixConfig());
 
 const { editGateway, isLoadingEditGateway } = useEditGateway();
 async function save() {
@@ -120,17 +144,34 @@ async function save() {
 
   await editGateway({
     hotelId: hotelId.value,
-    gateway: {
-      id: props.gateway.id,
-      type: props.gateway.type,
-      name: newName.value,
-      method: newMethod.value,
-      isActive: props.gateway.isActive,
-      configuration: newConfiguration.value,
-    },
+    gateway: getGateway(),
   });
 
   model.value = false;
+}
+
+function getGateway(): Gateway {
+  const baseGateway = {
+    id: props.gateway.id,
+    name: newName.value,
+    method: newMethod.value,
+    isActive: props.gateway.isActive,
+  }
+
+  switch(props.gateway.type) {
+    case GatewayType.ApiPix:
+      return {
+        ...baseGateway,
+        type: GatewayType.ApiPix,
+        configuration: newApiPixConfig.value,
+      }
+    case GatewayType.OpenPix:
+      return {
+        ...baseGateway,
+        type: GatewayType.OpenPix,
+        configuration: newOpenPixConfig.value,
+      }
+  }
 }
 
 watchEffect(() => {
@@ -140,7 +181,15 @@ watchEffect(() => {
 function reset() {
   newName.value = props.gateway.name;
   newMethod.value = props.gateway.method;
-  newConfiguration.value = { ...props.gateway.configuration };
+
+  switch(props.gateway.type) {
+    case GatewayType.ApiPix:
+      newApiPixConfig.value = { ...props.gateway.configuration };
+      break;
+    case GatewayType.OpenPix:
+      newOpenPixConfig.value = { ...props.gateway.configuration };
+      break;
+  }
 }
 
 function cancel() {

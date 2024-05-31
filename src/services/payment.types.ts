@@ -1,12 +1,13 @@
-export type Gateway = PixApiGateway;
-export type GatewayConfig = PixApiConfig;
+export type Gateway = ApiPixGateway | OpenPixGateway;
+export type GatewayConfig = ApiPixConfig | OpenPixConfig;
 
 export enum PaymentMethod {
   Pix = "Pix",
 }
 
 export enum GatewayType {
-  PixApi = "PixApi",
+  ApiPix = "ApiPix",
+  OpenPix = "OpenPix",
 }
 
 interface BaseGateway {
@@ -15,15 +16,15 @@ interface BaseGateway {
   isActive: boolean,
   method: PaymentMethod,
   type: GatewayType,
-  configuration: PixApiConfig,
+  configuration: GatewayConfig,
 }
 
-interface PixApiGateway extends BaseGateway {
-  type: GatewayType.PixApi,
-  configuration: PixApiConfig,
+interface ApiPixGateway extends BaseGateway {
+  type: GatewayType.ApiPix,
+  configuration: ApiPixConfig,
 }
 
-export class PixApiConfig {
+export class ApiPixConfig {
   expirationInMinutes: number = 10;
   pixKey: string = '';
   baseUrl: string = '';
@@ -31,4 +32,14 @@ export class PixApiConfig {
   clientId: string = '';
   clientSecret: string = '';
   certificate: string = '';
+}
+
+interface OpenPixGateway extends BaseGateway {
+  type: GatewayType.OpenPix,
+  configuration: OpenPixConfig,
+}
+
+export class OpenPixConfig {
+  expirationInMinutes: number = 15;
+  appId: string = '';
 }
