@@ -43,7 +43,7 @@ import { computed, ref, watchEffect } from 'vue';
 const props = defineProps<{ hotelId: string }>();
 const hotelId = computed(() => props.hotelId);
 
-const { gateways, isLoadingGateways} = useGateways(hotelId);
+const { gateways } = useGateways(hotelId);
 const { toggleGateway, isBeingToggled, isLoadingToggleGateway } = useToggleGateway();
 
 const toggle = async (gateway: Gateway) => {

@@ -38,7 +38,8 @@
 import Page from '@/components/Page.vue';
 import ChipFilterDate from '@/components/ChipFilterDate.vue';
 import ChipFilterSelect from '@/components/ChipFilterSelect.vue';
-import { Booking, BookingStatus, PaymentMethod, searchBookings, allStatus, translateStatus } from '@/services/booking';
+import { Booking, BookingStatus, searchBookings, allStatus, translateStatus } from '@/services/booking';
+import { PaymentMethod } from '@/services/payment.types';
 import { useCurrentHotel } from '@/services/hotel';
 import { ref, computed, watchEffect } from 'vue';
 

@@ -52,7 +52,7 @@
 <script setup lang="ts">
 import Page from '@/components/Page.vue';
 import { useCurrentHotel, useListHotels, useSetupPms } from '@/services/hotel';
-import { Pms, NoneConfig, LetohConfig, PmsConfig, Hotel } from '@/services/hotel.types';
+import { Pms, NoneConfig, LetohConfig, PmsConfig } from '@/services/hotel.types';
 import { Ref } from 'vue';
 import { watchEffect } from 'vue';
 import { computed } from 'vue';

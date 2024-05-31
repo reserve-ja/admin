@@ -49,7 +49,7 @@ defineProps<{
 }>();
 
 const chip = ref();
-const isPickerOpen = ref<boolean>(false);
+// const isPickerOpen = ref<boolean>(false);
 
 // const readableDate = computed(() =>  model.value.toLocaleDateString());
 
