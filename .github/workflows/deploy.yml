@@ -29,7 +29,7 @@ jobs:
     env:
       VITE_SUPABASE_URL: https://mqhgevrxudvyeytdtmcf.supabase.co
       VITE_SUPABASE_ANON_KEY: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im1xaGdldnJ4dWR2eWV5dGR0bWNmIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MDYyODU4ODEsImV4cCI6MjAyMTg2MTg4MX0.VIBnuJlN67m1e37zTb9Imd1zfy9ccZ5-nqdxPrRSpF4
-      VITE_API_BASE_URL: http://ec2-18-228-36-29.sa-east-1.compute.amazonaws.com
+      VITE_API_BASE_URL: https://reserve-ja.com
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
