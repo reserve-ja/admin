@@ -4,6 +4,7 @@ import { supabase } from './supabase';
 import { queryClient } from './query';
 import { useCurrentHotel } from './hotel';
 import { useUser } from './user';
+import * as Sentry from "@sentry/vue";
 
 const session = ref<Session|null>(null);
 const loadingAuth = ref<boolean>(false);
@@ -45,6 +46,11 @@ export function useAuth() {
         session.value = supabaseSession;
         useUser().fetchUser();
       }
+
+      Sentry.setUser({
+        id: supabaseSession?.user.id,
+        email: supabaseSession?.user.email,
+      });
 
       loadingAuth.value = false;
     });

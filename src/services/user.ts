@@ -1,5 +1,6 @@
 import { http } from "./http";
 import { computed, ref } from "vue";
+import * as Sentry from "@sentry/vue";
 
 const user = ref<User>();
 
@@ -11,6 +12,7 @@ export function useUser() {
   }
 
   function clearUser() {
+    Sentry.setUser(null);
     user.value = undefined;
   }
 
