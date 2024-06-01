@@ -22,7 +22,7 @@ export default defineConfig({
     }),
     sentryVitePlugin({
       org: "reserve-ja",
-      project: "javascript-vue"
+      project: "admin"
     })
   ],
   define: { 'process.env': {} },

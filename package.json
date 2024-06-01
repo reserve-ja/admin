@@ -1,6 +1,5 @@
 {
-  "name": "mbe-web",
-  "version": "0.0.0",
+  "name": "@reserve-ja/admin",
   "private": true,
   "scripts": {
     "dev": "vite",
