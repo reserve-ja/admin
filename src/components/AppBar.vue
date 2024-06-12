@@ -95,7 +95,7 @@ const { smAndUp } = useDisplay();
 
 const title = computed(() => {
   if (!currentHotel.value?.name) {
-    return "M.B.E.";
+    return "Reserve Já";
   }
 
   return currentHotel.value?.name;

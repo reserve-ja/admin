@@ -4,7 +4,7 @@
       <v-col class="d-flex flex-column justify-center align-center">
         <v-card min-width="300" class="rounded-xl">
           <v-card-text class="pa-8">
-            <h1 class="text-center pb-6">M.B.E.</h1>
+            <h1 class="text-center pb-6">Reserve Já</h1>
             <v-form @submit.prevent="handleLogin">
               <v-text-field
                 v-model="email"
