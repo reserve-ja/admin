@@ -63,12 +63,14 @@ export function useEditRoomDetails() {
       roomId: string,
       name: string,
       description: string,
+      photos: string[],
      }) => {
       const { hotelId, roomId } = input;
 
       const { data } = await http.patch(`/hotels/${hotelId}/rooms/${roomId}`, {
         name: input.name,
         description: input.description,
+        photos: input.photos.map(p => p.trim()).filter(p => p.length > 0),
       });
 
       return data;

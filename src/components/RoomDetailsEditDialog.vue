@@ -1,6 +1,6 @@
 <template>
   <v-form ref="form">
-    <Dialog title="Editar quarto" v-model="model" max-width="400">
+    <Dialog title="Editar quarto" v-model="model" max-width="600">
       <v-text-field
         v-model="newName"
         label="Nome"
@@ -13,6 +13,33 @@
         label="Descrição"
         prepend-icon="mdi-text-box-outline"
       />
+
+      <v-input
+        prepend-icon="mdi-image-multiple-outline"
+      >
+        <p class="text-overline">IMAGENS</p>
+      </v-input>
+      <v-text-field
+        v-for="(photo, i) in newPhotos"
+        :key="i"
+        v-model="photo.uri"
+        label="URL da imagem"
+        placeholder="https://exemplo.com.br/imagem.png"
+        density="comfortable"
+        prepend-icon="mdi-link"
+        append-icon="mdi-close"
+        @click:append="removePhoto(i)"
+      />
+      <div class="d-flex justify-center">
+        <v-btn
+          variant="text"
+          @click="addPhoto"
+          prepend-icon="mdi-image-plus-outline"
+          class="text-center"
+        >
+          Adicionar imagem
+        </v-btn>
+      </div>
 
       <template #actions>
         <v-spacer />
@@ -47,18 +74,31 @@ const { hotelId } = useCurrentHotel();
 const { rooms } = useRooms(hotelId);
 const room = computed(() => rooms.value?.find((room: Room) => room.id === props.roomId));
 
+const transformPhoto = (photo: string) => ({ uri: photo });
+
 const form = ref();
 const newName = ref<string>(room.value?.name ?? '');
 const newDescription = ref<string>(room.value?.description ?? '');
+const newPhotos = ref<{ uri: string }[]>(room.value?.photos.map(transformPhoto) ?? []);
 
 watchEffect(() => {
   newName.value = room.value?.name ?? '';
   newDescription.value = room.value?.description ?? '';
+  newPhotos.value = room.value?.photos.map(transformPhoto) ?? [];
 });
+
+function addPhoto() {
+  newPhotos.value.push({ uri: '' });
+}
+
+function removePhoto(index: number) {
+  newPhotos.value.splice(index, 1);
+}
 
 async function cancel() {
   newName.value = room.value?.name ?? '';
   newDescription.value = room.value?.description ?? '';
+  newPhotos.value = room.value?.photos.map(transformPhoto) ?? [];
   model.value = false;
 }
 
@@ -72,6 +112,7 @@ async function save() {
     roomId: props.roomId,
     name: newName.value,
     description: newDescription.value,
+    photos: newPhotos.value.map(photo => photo.uri),
   });
 
   model.value = false;

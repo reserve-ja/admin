@@ -5,6 +5,7 @@ export type Room = {
   name: string,
   description: string,
   capacity: number,
+  photos: string[],
 }
 
 export type Rate = {
