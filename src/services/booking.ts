@@ -7,10 +7,8 @@ export function useBookingDetails(hotelId: Ref<string>, bookingId: Ref<string>) 
   const { data: booking, isPending: isLoadingBooking } = useQuery<Booking>({
     queryKey: ['booking', { hotelId: hotelId.value, bookingId: bookingId.value }],
     queryFn: async () => {
-      console.log('fetching booking', bookingId.value);
-
       const { data } = await http.get(`/hotels/${hotelId.value}/bookings/${bookingId.value}`);
-      console.log('fetched booking', bookingId.value);
+
       return data;
     }
   });
@@ -53,15 +51,15 @@ export type Booking = {
 }
 
 export enum BookingStatus {
+  Unknown = "Unknown",
   WaitingPreBook = "WaitingPreBook",
   PreBooked = "PreBooked",
-  WaitingPayment = "WaitingPayment",
   Booked = "Booked",
   Canceled = "Canceled",
 }
 
 export function allStatus(): BookingStatus[] {
-  return Object.values(BookingStatus);
+  return Object.values(BookingStatus).filter(s => s !== BookingStatus.Unknown);
 }
 
 export function translateStatus(status?: BookingStatus) {
@@ -70,8 +68,6 @@ export function translateStatus(status?: BookingStatus) {
       return "Aguardando Pré-Reserva";
     case BookingStatus.PreBooked:
       return "Pré-Reservado";
-    case BookingStatus.WaitingPayment:
-      return "Aguardando Pagamento";
     case BookingStatus.Booked:
       return "Reservado";
     case BookingStatus.Canceled:

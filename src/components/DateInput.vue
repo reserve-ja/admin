@@ -33,7 +33,7 @@
     :prepend-icon="prependIcon"
     :density="density"
     readonly
-    hide-details
+    :hide-details="hideDetails"
   >
     <v-menu
       activator="parent"
@@ -65,11 +65,12 @@ const props = defineProps<{
   label: string | undefined,
   prependIcon?: string | undefined,
   showAdjacentMonths?: boolean | undefined,
+  hideDetails?: boolean,
 }>();
 const model = defineModel<Date>({ required: true });
 
 const { xs } = useDisplay();
-const readableDate = computed(() =>  model.value.toLocaleDateString());
+const readableDate = computed(() =>  model.value.toLocaleDateString('pt-BR'));
 
 function selectDate(event: Date, isActive: Ref<boolean>): void {
   model.value = event;

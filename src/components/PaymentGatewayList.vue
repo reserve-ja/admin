@@ -59,7 +59,6 @@ watchEffect(() => {
 const editGatewayDialog = ref<Record<string, boolean>>({});
 
 function openEditDialog(gateway: Gateway) {
-  console.log(`opening`)
   editGatewayDialog.value[gateway.id] = true;
 }
 </script>

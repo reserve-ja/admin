@@ -5,9 +5,25 @@ export enum PaymentMethod {
   Pix = "Pix",
 }
 
+export enum PaymentStatus {
+  Requested = "Requested",
+  Paid = "Paid",
+  Canceled = "Canceled",
+  Refunded = "Refunded",
+}
+
 export enum GatewayType {
   ApiPix = "ApiPix",
   OpenPix = "OpenPix",
+}
+
+export type Payment = {
+  id: string,
+  bookingId: string,
+  amount: number,
+  method: PaymentMethod,
+  status: PaymentStatus,
+  createdAt: Date,
 }
 
 interface BaseGateway {

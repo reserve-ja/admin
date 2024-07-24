@@ -7,7 +7,6 @@
       :items="rooms"
       :headers="tableHeaders"
       :loading="isLoadingRooms"
-      @click="console.log('click')"
     >
       <template v-slot:[`item.name`]="{ item }">
         <router-link :to="`/rooms/${item.id}`">

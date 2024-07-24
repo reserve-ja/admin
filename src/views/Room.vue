@@ -26,50 +26,17 @@
       <v-data-table
         :items="rates"
         :headers="ratesHeaders"
-        :loading="isLoadingRates"
-        show-expand
+        :loading="isLoadingRates || isLoadingRatePlans"
       >
+        <template v-slot:[`item.ratePlanId`]="{ item }">
+          {{ ratePlanName(item.ratePlanId) }}
+        </template>
         <template v-slot:[`item.actions`]="{ item }">
           <v-btn
             icon="mdi-trash-can-outline"
             variant="text"
             @click="deleteRate(item)"
           />
-        </template>
-        <template v-slot:expanded-row="{ columns, item }">
-          <tr>
-            <td :colspan="columns.length">
-              <v-table theme="dark" density="compact">
-                <thead>
-                  <tr>
-                    <th class="text-left">
-                      <v-icon size="small">mdi-cash</v-icon>
-                      Método de pagamento
-                    </th>
-                    <th class="text-left">
-                      <v-icon size="small">mdi-account-multiple</v-icon>
-                      Hóspedes
-                    </th>
-                    <th class="text-left">
-                      <v-icon size="small">mdi-currency-usd</v-icon>
-                      Valor (R$)
-                    </th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr
-                    v-for="(price, i) in item.prices.sort((a, b) =>
-                      a.paymentMethod.localeCompare(b.paymentMethod) || a.guests + b.guests)"
-                    :key="`price-${i}`"
-                  >
-                    <td>{{ price.paymentMethod }}</td>
-                    <td>{{ price.guests }}</td>
-                    <td>{{ price.amount }}</td>
-                  </tr>
-                </tbody>
-              </v-table>
-            </td>
-          </tr>
         </template>
       </v-data-table>
     </template>
@@ -96,6 +63,7 @@ import { useRooms, useRoomRates } from '@/services/room';
 import { Room, Rate } from '@/services/room.types';
 import { ref } from 'vue';
 import { computed } from 'vue';
+import { useRatePlans } from '@/services/rate-plan';
 
 const props = defineProps<{ roomId: string }>();
 
@@ -115,13 +83,19 @@ const details = computed(() => [
 ]);
 
 const { rates, isLoadingRates } = useRoomRates(hotelId, roomId);
+const { ratePlans, isLoadingRatePlans } = useRatePlans(hotelId);
 
 const ratesHeaders = [
-  { title: 'Início', value: 'start' },
-  { title: 'Fim', value: 'end' },
-  { title: 'Preço padrão (R$)', value: 'defaultPrice' },
-  { title: 'Ações', value: 'actions', sortable: false },
+  { title: 'Data', key: 'date', },
+  { title: 'Tarifa', key: 'ratePlanId' },
+  { title: 'Hóspedes', key: 'guests' },
+  { title: 'Preço (R$)', key: 'price' },
+  { title: 'Ações', key: 'actions', sortable: false },
 ];
+
+function ratePlanName(ratePlanId: string): string {
+  return ratePlans.value?.find(rp => rp.id === ratePlanId)?.name ?? '';
+}
 
 const deleteRateDialog = ref<boolean>(false);
 const deleteRateHotelId = ref<string>('');

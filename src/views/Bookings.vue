@@ -30,6 +30,9 @@
           {{ item.id.substring(0, 8) }}
         </router-link>
       </template>
+      <template v-slot:[`item.status`]="{ item }">
+        <BookingStatusChip :status="item.status ?? BookingStatus.Unknown" />
+      </template>
     </v-data-table>
   </Page>
 </template>
@@ -42,6 +45,7 @@ import { Booking, BookingStatus, searchBookings, allStatus, translateStatus } fr
 import { PaymentMethod } from '@/services/payment.types';
 import { useCurrentHotel } from '@/services/hotel';
 import { ref, computed, watchEffect } from 'vue';
+import BookingStatusChip from '@/components/BookingStatusChip.vue';
 
 const checkinFrom = ref<Date>();
 const checkinTo = ref<Date>();
@@ -56,7 +60,7 @@ const items = computed(() => bookings.value.map(b => ({
   mainGuest: b.mainGuest.fullName,
   checkin: b.checkin,
   checkout: b.checkout,
-  status: translateStatus(b.status),
+  status: b.status,
   totalGuests: b.rooms.reduce((acc, r) => acc + r.totalGuests, 0),
   totalPrice: b.rooms.reduce((acc, r) => acc + r.totalPrice, 0),
 })));

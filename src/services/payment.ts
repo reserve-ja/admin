@@ -1,7 +1,7 @@
 import { useMutation, useQuery } from "@tanstack/vue-query";
 import { Ref, ref } from "vue";
 import { http } from "./http";
-import { Gateway } from "./payment.types";
+import { Gateway, Payment } from "./payment.types";
 import { queryClient } from "./query";
 import { AxiosError } from "axios";
 import { useErrors } from "./error";
@@ -100,4 +100,16 @@ export function useToggleGateway() {
   const isBeingToggled = (gatewayId: string) => gatewayIdBeingToggled.value === gatewayId;
 
   return { toggleGateway, isLoadingToggleGateway, isBeingToggled };
+}
+
+export function usePaymentFromBooking(bookingId: Ref<string>) {
+    const { data: payment, isPending: isLoadingPayment } = useQuery<Payment>({
+      queryKey: ['payment', { bookingId }],
+      queryFn: async () => {
+        const { data } = await http.get<Payment>(`/payments/bookings/${bookingId.value}/payment`);
+        return data;
+      }
+    })
+
+    return { payment, isLoadingPayment };
 }

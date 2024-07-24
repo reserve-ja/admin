@@ -1,21 +1,18 @@
 import { Ref, computed } from "vue"
 import { http } from "./http";
 import { useMutation, useQuery } from "@tanstack/vue-query";
-import { Rate, RatePrice, Room } from "./room.types";
+import { Rate, Room } from "./room.types";
 import { queryClient } from "./query";
 
 export function useRooms(hotelId: Ref<string>) {
   const { data: rooms, isPending: isLoadingRooms } = useQuery<Room[]>({
     queryKey: ['rooms', { hotelId }],
     queryFn: async () => {
-      console.log('fetching rooms', hotelId.value);
       if (!hotelId.value) {
-        console.log('vazio')
         return [];
       }
 
       const { data } = await http.get(`/hotels/${hotelId.value}/rooms`);
-      console.log('fetched')
       return data;
     }
   });
@@ -91,18 +88,20 @@ export function useAddRate() {
     mutationFn: async (input: {
       hotelId: string,
       roomId: string,
+      ratePlanId: string,
       start: Date,
       end: Date,
-      defaultPrice: number,
-      prices: RatePrice[],
+      guests: number,
+      price: number,
      }) => {
       const { hotelId, roomId } = input;
 
       const { data } = await http.post(`/hotels/${hotelId}/rooms/${roomId}/rates`, {
+        ratePlanId: input.ratePlanId,
         start: input.start.toISOString().substring(0, 10),
         end: input.end.toISOString().substring(0, 10),
-        defaultPrice: input.defaultPrice,
-        prices: input.prices,
+        guests: input.guests,
+        price: input.price,
       });
 
       return data;

@@ -11,14 +11,24 @@
             {{ item.title }}
           </span>
         </td>
-        <td>{{ item.value }}</td>
+        <td v-if="item.value in BookingStatus ">
+          <BookingStatusChip :status="item.value as BookingStatus" />
+        </td>
+        <td v-else>
+          {{ item.value }}
+        </td>
       </tr>
     </tbody>
   </v-table>
 </template>
 
 <script setup lang="ts">
-type Item = { title: string, icon: string, value: string };
+import { BookingStatus } from '@/services/booking';
+import { PaymentStatus } from '@/services/payment.types';
+import BookingStatusChip from './BookingStatusChip.vue';
+
+type Value = string | number | PaymentStatus | BookingStatus;
+type Item = { title: string, icon: string, value: Value };
 
 defineProps<{ items: Item[] }>();
 </script>

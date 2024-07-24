@@ -11,14 +11,7 @@ export type Room = {
 export type Rate = {
   id: string,
   roomId: string,
-  defaultPrice: number,
-  start: string,
-  end: string,
-  prices: RatePrice[],
-}
-
-export type RatePrice = {
-  amount: number,
-  guests: number,
-  paymentMethod: string,
+  ratePlanId: string,
+  price: number,
+  date: string,
 }

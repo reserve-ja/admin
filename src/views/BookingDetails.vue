@@ -14,8 +14,11 @@
         </v-col>
       </v-row>
       <v-row>
-        <v-col>
-
+        <v-col cols="12" md="6">
+          <p class="text-h6 font-weight-regular pt-3">Pagamento</p>
+          <DetailsTable :items="paymentDetails" />
+        </v-col>
+        <v-col cols="12" md="6">
           <p class="text-h6 font-weight-regular pt-3">Quartos</p>
           <v-data-table
             :items="bookingRooms"
@@ -54,8 +57,9 @@ import DetailsTable from '@/components/DetailsTable.vue';
 import BookingRoomPriceDetailsDialog from '@/components/BookingRoomPriceDetailsDialog.vue';
 import { useCurrentHotel, useListHotels } from '@/services/hotel';
 import { computed, ref, watchEffect } from 'vue';
-import { PriceDetails, translateStatus, useBookingDetails } from '@/services/booking';
+import { PriceDetails,  useBookingDetails } from '@/services/booking';
 import { useRooms } from '@/services/room';
+import { usePaymentFromBooking } from '@/services/payment';
 
 const props = defineProps<{ hotelId: string, bookingId: string }>();
 
@@ -74,11 +78,12 @@ watchEffect(() => {
 
 const { booking, isLoadingBooking } = useBookingDetails(hotelId, bookingId);
 const { isLoadingRooms, roomName } = useRooms(hotelId);
+const { payment } = usePaymentFromBooking(bookingId);
 
 const details = computed(() => [
   { icon: 'mdi-calendar-start-outline', title: 'Check In', value: booking.value?.checkin ?? '' },
   { icon: 'mdi-calendar-end-outline', title: 'Check Out', value: booking.value?.checkout ?? '' },
-  { icon: 'mdi-check', title: 'Status', value: translateStatus(booking.value?.status) },
+  { icon: 'mdi-check', title: 'Status', value: booking.value?.status ?? '' },
   { icon: 'mdi-account-multiple-outline', title: 'Hóspedes', value: booking.value?.rooms.reduce((acc, r) => acc + r.totalGuests, 0).toString() ?? '' },
   { icon: 'mdi-bed-outline', title: 'Quartos', value: booking.value?.rooms.length.toString() ?? '' },
   { icon: 'mdi-currency-usd', title: 'Total', value: booking.value?.rooms.reduce((acc, r) => acc + r.totalPrice, 0).toString() ?? '' },
@@ -89,6 +94,12 @@ const guestDetails = computed(() => [
   { icon: 'mdi-email-outline', title: 'Email', value: booking.value?.mainGuest.email ?? '' },
   { icon: 'mdi-phone-outline', title: 'Telefone', value: booking.value?.mainGuest.phone ?? '' },
 ]);
+
+const paymentDetails = computed(() => [
+  { icon: 'mdi-currency-usd', title: 'Total', value: payment.value?.amount.toString() ?? '' },
+  { icon: 'mdi-credit-card-outline', title: 'Método', value: payment.value?.method.toString() ?? '' },
+  { icon: 'mdi-check', title: 'Status', value: payment.value?.status.toString() ?? '' },
+])
 
 const bookingRooms = computed(() => booking.value?.rooms.map(r => ({
   name: roomName.value(r.roomId),
