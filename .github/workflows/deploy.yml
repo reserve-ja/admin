@@ -27,9 +27,9 @@ jobs:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
     env:
-      VITE_SUPABASE_URL: https://mqhgevrxudvyeytdtmcf.supabase.co
-      VITE_SUPABASE_ANON_KEY: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im1xaGdldnJ4dWR2eWV5dGR0bWNmIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MDYyODU4ODEsImV4cCI6MjAyMTg2MTg4MX0.VIBnuJlN67m1e37zTb9Imd1zfy9ccZ5-nqdxPrRSpF4
-      VITE_API_BASE_URL: https://reserve-ja.com
+      VITE_SUPABASE_URL: ${{ secrets.VITE_SUPABASE_URL }}
+      VITE_SUPABASE_ANON_KEY: ${{ secrets.VITE_SUPABASE_ANON_KEY }}
+      VITE_API_BASE_URL: ${{ secrets.VITE_API_BASE_URL }}
       SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
     runs-on: ubuntu-latest
     steps:
