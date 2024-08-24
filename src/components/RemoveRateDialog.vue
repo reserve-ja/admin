@@ -1,7 +1,6 @@
 <template>
   <v-dialog v-model="model" max-width="400">
     <v-card
-      prepend-icon="mdi-trash-can-outline"
       text="A tarifa deletada não poderá ser recuperada. Deseja continuar?"
       title="Remover tarifa"
     >

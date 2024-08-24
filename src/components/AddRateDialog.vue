@@ -33,6 +33,24 @@
         </v-col>
       </v-row>
       <v-row>
+        <v-col class="d-flex align-center">
+          <v-btn-toggle
+            v-model="weekDays"
+            multiple
+            variant="outlined"
+            divided
+          >
+            <v-btn text="D" :value="WeekDay.Sunday" />
+            <v-btn text="2ª" :value="WeekDay.Monday" />
+            <v-btn text="3ª" :value="WeekDay.Tuesday" />
+            <v-btn text="4ª" :value="WeekDay.Wednesday" />
+            <v-btn text="5ª" :value="WeekDay.Thursday" />
+            <v-btn text="6ª" :value="WeekDay.Friday" />
+            <v-btn text="S" :value="WeekDay.Saturday" />
+          </v-btn-toggle>
+        </v-col>
+      </v-row>
+      <v-row>
         <v-col cols="12" md="6">
           <v-number-input
             v-model="guests"
@@ -83,7 +101,7 @@ import Dialog from '@/components/Dialog.vue';
 import { useCurrentHotel } from '@/services/hotel';
 import { useRatePlans } from '@/services/rate-plan';
 import { useRooms, useAddRate } from '@/services/room';
-import { Room } from '@/services/room.types';
+import { Room, WeekDay } from '@/services/room.types';
 import { computed, watchEffect } from 'vue';
 import { ref } from 'vue';
 
@@ -100,6 +118,7 @@ const form = ref();
 const ratePlanId = ref<string>('');
 const start = ref<Date>(new Date());
 const end = ref<Date>(new Date());
+const weekDays = ref<WeekDay[]>([WeekDay.Sunday, WeekDay.Monday, WeekDay.Tuesday, WeekDay.Wednesday, WeekDay.Thursday, WeekDay.Friday, WeekDay.Saturday]);
 const guests = ref<number>(0);
 const price = ref<number>(0);
 
@@ -123,6 +142,7 @@ async function save() {
     ratePlanId: ratePlanId.value,
     start: start.value,
     end: end.value,
+    weekDays: [...weekDays.value],
     guests: guests.value,
     price: price.value,
   });

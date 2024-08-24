@@ -1,7 +1,7 @@
 import { Ref, computed } from "vue"
 import { http } from "./http";
 import { useMutation, useQuery } from "@tanstack/vue-query";
-import { Rate, Room } from "./room.types";
+import { Rate, Room, WeekDay } from "./room.types";
 import { queryClient } from "./query";
 
 export function useRooms(hotelId: Ref<string>) {
@@ -91,6 +91,7 @@ export function useAddRate() {
       ratePlanId: string,
       start: Date,
       end: Date,
+      weekDays: WeekDay[],
       guests: number,
       price: number,
      }) => {
@@ -100,6 +101,7 @@ export function useAddRate() {
         ratePlanId: input.ratePlanId,
         start: input.start.toISOString().substring(0, 10),
         end: input.end.toISOString().substring(0, 10),
+        weekDays: input.weekDays,
         guests: input.guests,
         price: input.price,
       });
