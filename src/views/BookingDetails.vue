@@ -61,7 +61,7 @@ import { PriceDetails,  useBookingDetails } from '@/services/booking';
 import { useRooms } from '@/services/room';
 import { usePaymentFromBooking } from '@/services/payment';
 import { formatMoney } from '@/services/money';
-import { formatDate } from '@/services/date';
+import { formatDate, formatDateTime } from '@/services/date';
 
 const props = defineProps<{ hotelId: string, bookingId: string }>();
 
@@ -88,6 +88,7 @@ const details = computed(() => [
   { icon: 'mdi-check', title: 'Status', value: booking.value?.status ?? '' },
   { icon: 'mdi-account-multiple-outline', title: 'Hóspedes', value: booking.value?.rooms.reduce((acc, r) => acc + r.totalGuests, 0).toString() ?? '' },
   { icon: 'mdi-bed-outline', title: 'Quartos', value: booking.value?.rooms.length.toString() ?? '' },
+  { icon: 'mdi-clock-outline', title: 'Reservado em', value: formatDateTime(new Date(booking.value?.creationTime ?? '')) },
 ]);
 
 const guestDetails = computed(() => [

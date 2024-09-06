@@ -48,6 +48,7 @@ export type Booking = {
   status: BookingStatus,
   mainGuest: Person,
   rooms: BookingRoom[],
+  creationTime: string,
 }
 
 export enum BookingStatus {

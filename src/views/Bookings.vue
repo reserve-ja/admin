@@ -24,7 +24,12 @@
         label="Status"
       />
     </div>
-    <v-data-table :loading="isLoadingBookings" :items="items" :headers="headers">
+    <v-data-table
+      :items="items"
+      :headers="headers"
+      :sort-by="[{ key: 'creationTime', order: 'desc' }]"
+      :loading="isLoadingBookings"
+    >
       <template v-slot:[`item.id`]="{ item }">
         <router-link :to="`hotels/${hotelId}/bookings/${item.id}`">
           {{ item.id.substring(0, 8) }}
@@ -38,6 +43,9 @@
       </template>
       <template v-slot:[`item.status`]="{ item }">
         <BookingStatusChip :status="item.status ?? BookingStatus.Unknown" />
+      </template>
+      <template v-slot:[`item.creationTime`]="{ item }">
+        {{ formatDateTime(item.creationTime) }}
       </template>
       <template v-slot:[`item.totalPrice`]="{ item }">
         {{ formatMoney(item.totalPrice) }}
@@ -74,6 +82,7 @@ const items = computed(() => bookings.value.map(b => ({
   status: b.status,
   totalGuests: b.rooms.reduce((acc, r) => acc + r.totalGuests, 0),
   totalPrice: b.rooms.reduce((acc, r) => acc + r.totalPrice, 0),
+  creationTime: new Date(b.creationTime),
 })));
 
 const { hotelId } = useCurrentHotel();
@@ -84,6 +93,7 @@ const headers = [
   { title: 'Hóspedes', key: 'totalGuests' },
   { title: 'Check In', key: 'checkin' },
   { title: 'Check Out', key: 'checkout' },
+  { title: 'Reservado em', key: 'creationTime' },
   { title: 'Status', key: 'status' },
   { title: 'Total', key: 'totalPrice' },
 ]
