@@ -14,6 +14,9 @@
         <td v-if="item.value in BookingStatus ">
           <BookingStatusChip :status="item.value as BookingStatus" />
         </td>
+        <td v-else-if="item.value in PaymentStatus">
+          <PaymentStatusChip :status="item.value as PaymentStatus" />
+        </td>
         <td v-else>
           {{ item.value }}
         </td>
@@ -26,6 +29,7 @@
 import { BookingStatus } from '@/services/booking';
 import { PaymentStatus } from '@/services/payment.types';
 import BookingStatusChip from './BookingStatusChip.vue';
+import PaymentStatusChip from './PaymentStatusChip.vue';
 
 type Value = string | number | PaymentStatus | BookingStatus;
 type Item = { title: string, icon: string, value: Value };

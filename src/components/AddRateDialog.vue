@@ -21,6 +21,7 @@
             label="Início"
             prepend-inner-icon="mdi-calendar-start-outline"
             hide-details
+            show-adjacent-months
           />
         </v-col>
         <v-col cols="12" md="6">
@@ -29,6 +30,7 @@
             label="Fim"
             prepend-inner-icon="mdi-calendar-end-outline"
             hide-details
+            show-adjacent-months
           />
         </v-col>
       </v-row>

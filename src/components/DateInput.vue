@@ -48,6 +48,7 @@
           color="primary"
           :show-adjacent-months="showAdjacentMonths"
           hide-header
+          rounded="xl"
         />
       </template>
     </v-menu>

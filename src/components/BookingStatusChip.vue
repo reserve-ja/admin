@@ -1,6 +1,6 @@
 <template>
   <div v-if="props.status === BookingStatus.Unknown" />
-  <v-chip v-else :color="statusColor[props.status] ?? 'default'">
+  <v-chip v-else rounded="xl" :color="statusColor[props.status] ?? 'default'">
     {{ statusName[props.status] ?? props.status }}
   </v-chip>
 </template>
