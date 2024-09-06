@@ -30,8 +30,17 @@
           {{ item.id.substring(0, 8) }}
         </router-link>
       </template>
+      <template v-slot:[`item.checkin`]="{ item }">
+        {{ formatDate(item.checkin) }}
+      </template>
+      <template v-slot:[`item.checkout`]="{ item }">
+        {{ formatDate(item.checkout) }}
+      </template>
       <template v-slot:[`item.status`]="{ item }">
         <BookingStatusChip :status="item.status ?? BookingStatus.Unknown" />
+      </template>
+      <template v-slot:[`item.totalPrice`]="{ item }">
+        {{ formatMoney(item.totalPrice) }}
       </template>
     </v-data-table>
   </Page>
@@ -44,8 +53,10 @@ import ChipFilterSelect from '@/components/ChipFilterSelect.vue';
 import { Booking, BookingStatus, searchBookings, allStatus, translateStatus } from '@/services/booking';
 import { PaymentMethod } from '@/services/payment.types';
 import { useCurrentHotel } from '@/services/hotel';
+import { formatMoney } from '@/services/money';
 import { ref, computed, watchEffect } from 'vue';
 import BookingStatusChip from '@/components/BookingStatusChip.vue';
+import { formatDate, formatDateTime } from '@/services/date';
 
 const checkinFrom = ref<Date>();
 const checkinTo = ref<Date>();
@@ -58,8 +69,8 @@ const isLoadingBookings = ref<boolean>(false);
 const items = computed(() => bookings.value.map(b => ({
   id: b.id,
   mainGuest: b.mainGuest.fullName,
-  checkin: b.checkin,
-  checkout: b.checkout,
+  checkin: new Date(b.checkin),
+  checkout: new Date(b.checkout),
   status: b.status,
   totalGuests: b.rooms.reduce((acc, r) => acc + r.totalGuests, 0),
   totalPrice: b.rooms.reduce((acc, r) => acc + r.totalPrice, 0),
@@ -68,13 +79,13 @@ const items = computed(() => bookings.value.map(b => ({
 const { hotelId } = useCurrentHotel();
 
 const headers = [
-  { title: 'ID', value: 'id' },
-  { title: 'Hóspede', value: 'mainGuest' },
-  { title: 'Check In', value: 'checkin' },
-  { title: 'Check Out', value: 'checkout' },
-  { title: 'Status', value: 'status' },
-  { title: 'Hóspedes', value: 'totalGuests' },
-  { title: 'Total (R$)', value: 'totalPrice' },
+  { title: 'ID', key: 'id' },
+  { title: 'Nome', key: 'mainGuest' },
+  { title: 'Hóspedes', key: 'totalGuests' },
+  { title: 'Check In', key: 'checkin' },
+  { title: 'Check Out', key: 'checkout' },
+  { title: 'Status', key: 'status' },
+  { title: 'Total', key: 'totalPrice' },
 ]
 
 const statusOptions = [

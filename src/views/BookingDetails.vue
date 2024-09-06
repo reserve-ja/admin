@@ -60,6 +60,8 @@ import { computed, ref, watchEffect } from 'vue';
 import { PriceDetails,  useBookingDetails } from '@/services/booking';
 import { useRooms } from '@/services/room';
 import { usePaymentFromBooking } from '@/services/payment';
+import { formatMoney } from '@/services/money';
+import { formatDate } from '@/services/date';
 
 const props = defineProps<{ hotelId: string, bookingId: string }>();
 
@@ -81,12 +83,11 @@ const { isLoadingRooms, roomName } = useRooms(hotelId);
 const { payment } = usePaymentFromBooking(bookingId);
 
 const details = computed(() => [
-  { icon: 'mdi-calendar-start-outline', title: 'Check In', value: booking.value?.checkin ?? '' },
-  { icon: 'mdi-calendar-end-outline', title: 'Check Out', value: booking.value?.checkout ?? '' },
+  { icon: 'mdi-calendar-start-outline', title: 'Check In', value: formatDate(new Date(booking.value?.checkin ?? '')) },
+  { icon: 'mdi-calendar-end-outline', title: 'Check Out', value: formatDate(new Date(booking.value?.checkout ?? '')) },
   { icon: 'mdi-check', title: 'Status', value: booking.value?.status ?? '' },
   { icon: 'mdi-account-multiple-outline', title: 'Hóspedes', value: booking.value?.rooms.reduce((acc, r) => acc + r.totalGuests, 0).toString() ?? '' },
   { icon: 'mdi-bed-outline', title: 'Quartos', value: booking.value?.rooms.length.toString() ?? '' },
-  { icon: 'mdi-currency-usd', title: 'Total', value: booking.value?.rooms.reduce((acc, r) => acc + r.totalPrice, 0).toString() ?? '' },
 ]);
 
 const guestDetails = computed(() => [
@@ -96,7 +97,7 @@ const guestDetails = computed(() => [
 ]);
 
 const paymentDetails = computed(() => [
-  { icon: 'mdi-currency-usd', title: 'Total', value: payment.value?.amount.toString() ?? '' },
+  { icon: 'mdi-currency-usd', title: 'Total', value: formatMoney(payment.value?.amount ?? 0) },
   { icon: 'mdi-credit-card-outline', title: 'Método', value: payment.value?.method.toString() ?? '' },
   { icon: 'mdi-check', title: 'Status', value: payment.value?.status.toString() ?? '' },
 ])
@@ -104,14 +105,14 @@ const paymentDetails = computed(() => [
 const bookingRooms = computed(() => booking.value?.rooms.map(r => ({
   name: roomName.value(r.roomId),
   totalGuests: r.totalGuests,
-  totalPrice: r.totalPrice,
+  totalPrice: formatMoney(r.totalPrice),
   priceDetails: r.priceDetails,
 })) ?? []);
 
 const roomsHeaders = [
   { title: 'Quarto', value: 'name' },
   { title: 'Hóspedes', value: 'totalGuests' },
-  { title: 'Total (R$)', value: 'totalPrice' },
+  { title: 'Total', value: 'totalPrice' },
   { title: 'Ações', value: 'actions', sortable: false },
 ];
 

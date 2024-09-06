@@ -31,6 +31,12 @@
         <template v-slot:[`item.ratePlanId`]="{ item }">
           {{ ratePlanName(item.ratePlanId) }}
         </template>
+        <template v-slot:[`item.date`]="{ item }">
+          {{ formatDate(new Date(item.date)) }}
+        </template>
+        <template v-slot:[`item.price`]="{ item }">
+          {{ formatMoney(item.price) }}
+        </template>
         <template v-slot:[`item.actions`]="{ item }">
           <v-btn
             icon="mdi-trash-can-outline"
@@ -64,6 +70,8 @@ import { Room, Rate } from '@/services/room.types';
 import { ref } from 'vue';
 import { computed } from 'vue';
 import { useRatePlans } from '@/services/rate-plan';
+import { formatMoney } from '@/services/money';
+import { formatDate } from '@/services/date';
 
 const props = defineProps<{ roomId: string }>();
 
@@ -86,10 +94,10 @@ const { rates, isLoadingRates } = useRoomRates(hotelId, roomId);
 const { ratePlans, isLoadingRatePlans } = useRatePlans(hotelId);
 
 const ratesHeaders = [
-  { title: 'Data', key: 'date', },
   { title: 'Tarifa', key: 'ratePlanId' },
+  { title: 'Data', key: 'date', },
   { title: 'Hóspedes', key: 'guests' },
-  { title: 'Preço (R$)', key: 'price' },
+  { title: 'Preço', key: 'price' },
   { title: 'Ações', key: 'actions', sortable: false },
 ];
 

@@ -28,9 +28,9 @@ const { rooms, isLoadingRooms } = useRooms(hotelId);
 const { syncRooms, isSyncing } = useSyncRooms(hotelId);
 
 const tableHeaders = [
-  { title: 'Nome', value: 'name' },
-  { title: 'Ocupação máxima', value: 'capacity' },
-  { title: 'ID Externo', value: 'externalId' },
+  { title: 'Nome', key: 'name' },
+  { title: 'Ocupação máxima', key: 'capacity' },
+  { title: 'ID Externo', key: 'externalId' },
   { title: 'Ações', key: 'actions', sortable: false },
 ];
 </script>

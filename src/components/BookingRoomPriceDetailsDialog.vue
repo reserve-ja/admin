@@ -4,7 +4,7 @@
       <thead>
         <tr>
           <th>Data</th>
-          <th>Diária (R$)</th>
+          <th>Diária</th>
         </tr>
       </thead>
       <tbody>
@@ -13,7 +13,7 @@
           :key="item.date"
         >
           <td>{{ item.date }}</td>
-          <td>{{ item.rate }}</td>
+          <td>{{ formatMoney(item.rate) }}</td>
         </tr>
       </tbody>
     </v-table>
@@ -23,6 +23,7 @@
 <script setup lang="ts">
 import Dialog from '@/components/Dialog.vue';
 import { PriceDetails } from '@/services/booking';
+import { formatMoney } from '@/services/money';
 import { computed } from 'vue';
 
 const model = defineModel<boolean>({ required: true });
