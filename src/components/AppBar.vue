@@ -18,7 +18,7 @@
         </div>
       </template>
 
-      <v-list density="compact">
+      <v-list density="compact" rounded="lg">
         <v-list-item class="text-caption">{{ session?.user.email }}</v-list-item>
         <v-divider />
         <v-list-item @click="logout">
@@ -39,13 +39,13 @@
     width="284"
     :scrim="false"
   >
-    <div class="ma-3">
+    <div class="mx-3">
       <v-skeleton-loader
         v-if="props.loading"
         type="list-item"
       />
       <v-autocomplete
-        v-else
+        v-else-if="showHotelSelect"
         :model-value="currentHotel"
         @update:model-value="changeHotel"
         :items="hotels"
@@ -56,7 +56,7 @@
       />
     </div>
 
-    <v-divider />
+    <v-divider v-if="showHotelSelect" class="my-3" />
     <div v-if="props.loading">
       <v-skeleton-loader
         v-for="i in 4"
@@ -74,7 +74,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue'
+import { ref, watchEffect } from 'vue'
 import { useAuth } from '@/services/auth'
 import { computed } from 'vue';
 import { useListHotels, useCurrentHotel } from '@/services/hotel';
@@ -103,6 +103,10 @@ const title = computed(() => {
 
 const { hotels } = useListHotels();
 const { hotelId, changeCurrentHotel } = useCurrentHotel();
+
+const showHotelSelect = computed(() => {
+  return (hotels.value?.length ?? 0) > 1;
+});
 
 const currentHotel = computed(() => {
   return hotels.value?.find(hotel => hotel.id === hotelId.value);
