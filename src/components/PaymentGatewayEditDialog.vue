@@ -13,7 +13,7 @@
         <v-col cols="12" md="6">
           <v-select
             :model-value="gateway.type"
-            :items="[GatewayType.ApiPix, GatewayType.OpenPix]"
+            :items="[GatewayType.ApiPix, GatewayType.OpenPix, GatewayType.Stripe]"
             label="Tipo"
             prepend-icon="mdi-label-outline"
             disabled
@@ -22,7 +22,9 @@
         <v-col cols="12" md="6">
           <v-select
             v-model="newMethod"
-            :items="[PaymentMethod.Pix]"
+            :items="paymentMethods"
+            item-value="method"
+            item-title="label"
             label="Método de pagamento"
             prepend-icon="mdi-cash"
           />
@@ -102,6 +104,24 @@
           />
         </v-col>
       </v-row>
+      <v-row v-if="gateway.type === GatewayType.Stripe">
+        <v-col cols="12" md="6">
+          <v-text-field
+            v-model.number="newStripeConfig.secretKey"
+            prepend-icon="mdi-lock-outline"
+            label="Secret Key"
+            :rules="[(v: string) => !!v || 'Secret Key é obrigatório']"
+          />
+        </v-col>
+        <v-col cols="12" md="6">
+          <v-text-field
+            v-model="newStripeConfig.publishableKey"
+            label="Publishable Key"
+            prepend-icon="mdi-key-outline"
+            :rules="[(v: string) => !!v || 'Publishable Key é obrigatório']"
+          />
+        </v-col>
+      </v-row>
 
       <template #actions>
         <v-spacer />
@@ -124,7 +144,7 @@
 import Dialog from '@/components/Dialog.vue';
 import { useCurrentHotel } from '@/services/hotel';
 import { useEditGateway } from '@/services/payment';
-import { ApiPixConfig, Gateway, GatewayType, PaymentMethod, OpenPixConfig } from '@/services/payment.types';
+import { ApiPixConfig, Gateway, GatewayType, PaymentMethod, OpenPixConfig, StripeConfig } from '@/services/payment.types';
 import { ref, watchEffect } from 'vue';
 
 const model = defineModel<boolean>({ required: true });
@@ -136,6 +156,12 @@ const newName = ref<string>(props.gateway.name);
 const newMethod = ref<PaymentMethod>(PaymentMethod.Pix);
 const newApiPixConfig = ref<ApiPixConfig>(new ApiPixConfig());
 const newOpenPixConfig = ref<OpenPixConfig>(new OpenPixConfig());
+const newStripeConfig = ref<StripeConfig>(new StripeConfig());
+
+const paymentMethods = [
+  { method: PaymentMethod.Pix, label: 'Pix' },
+  { method: PaymentMethod.CreditCard, label: 'Cartão de Crédito' },
+]
 
 const { editGateway, isLoadingEditGateway } = useEditGateway();
 async function save() {
@@ -171,6 +197,12 @@ function getGateway(): Gateway {
         type: GatewayType.OpenPix,
         configuration: newOpenPixConfig.value,
       }
+    case GatewayType.Stripe:
+      return {
+        ...baseGateway,
+        type: GatewayType.Stripe,
+        configuration: newStripeConfig.value,
+      }
   }
 }
 
@@ -188,6 +220,9 @@ function reset() {
       break;
     case GatewayType.OpenPix:
       newOpenPixConfig.value = { ...props.gateway.configuration };
+      break;
+    case GatewayType.Stripe:
+      newStripeConfig.value = { ...props.gateway.configuration };
       break;
   }
 }

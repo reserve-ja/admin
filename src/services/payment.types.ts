@@ -1,8 +1,9 @@
-export type Gateway = ApiPixGateway | OpenPixGateway;
-export type GatewayConfig = ApiPixConfig | OpenPixConfig;
+export type Gateway = ApiPixGateway | OpenPixGateway | StripeGateway;
+export type GatewayConfig = ApiPixConfig | OpenPixConfig | StripeConfig;
 
 export enum PaymentMethod {
   Pix = "Pix",
+  CreditCard = "CreditCard",
 }
 
 export enum PaymentStatus {
@@ -15,6 +16,7 @@ export enum PaymentStatus {
 export enum GatewayType {
   ApiPix = "ApiPix",
   OpenPix = "OpenPix",
+  Stripe = "Stripe",
 }
 
 export type Payment = {
@@ -58,4 +60,14 @@ interface OpenPixGateway extends BaseGateway {
 export class OpenPixConfig {
   expirationInMinutes: number = 15;
   appId: string = '';
+}
+
+interface StripeGateway extends BaseGateway {
+  type: GatewayType.Stripe,
+  configuration: StripeConfig,
+}
+
+export class StripeConfig {
+  secretKey: string = '';
+  publishableKey: string = '';
 }
