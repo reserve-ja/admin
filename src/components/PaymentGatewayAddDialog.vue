@@ -13,7 +13,7 @@
         <v-col cols="12" md="6">
           <v-select
             v-model="type"
-            :items="[GatewayType.ApiPix, GatewayType.OpenPix]"
+            :items="[GatewayType.ApiPix, GatewayType.OpenPix, GatewayType.Stripe]"
             label="Tipo"
             prepend-icon="mdi-label-outline"
           />
@@ -21,7 +21,7 @@
         <v-col cols="12" md="6">
           <v-select
             v-model="paymentMethod"
-            :items="[PaymentMethod.Pix]"
+            :items="[PaymentMethod.Pix, PaymentMethod.CreditCard]"
             label="Método de pagamento"
             prepend-icon="mdi-cash"
           />
@@ -101,6 +101,24 @@
           />
         </v-col>
       </v-row>
+      <v-row v-if="type === GatewayType.Stripe">
+        <v-col cols="12" md="6">
+          <v-text-field
+            v-model.number="stripeConfig.secretKey"
+            prepend-icon="mdi-lock-outline"
+            label="Secret Key"
+            :rules="[(v: string) => !!v || 'Secret Key é obrigatório']"
+          />
+        </v-col>
+        <v-col cols="12" md="6">
+          <v-text-field
+            v-model="stripeConfig.publishableKey"
+            label="Publishable Key"
+            prepend-icon="mdi-key-outline"
+            :rules="[(v: string) => !!v || 'Publishable Key é obrigatório']"
+          />
+        </v-col>
+      </v-row>
 
       <template #actions>
         <v-spacer />
@@ -122,7 +140,7 @@
 <script setup lang="ts">
 import Dialog from '@/components/Dialog.vue';
 import { useAddGateway } from '@/services/payment';
-import { ApiPixConfig, Gateway, GatewayType, OpenPixConfig, PaymentMethod } from '@/services/payment.types';
+import { ApiPixConfig, Gateway, GatewayType, OpenPixConfig, StripeConfig, PaymentMethod } from '@/services/payment.types';
 import { ref } from 'vue';
 
 const model = defineModel<boolean>({ required: true });
@@ -134,6 +152,7 @@ const type = ref<GatewayType>(GatewayType.ApiPix);
 const paymentMethod = ref<PaymentMethod>(PaymentMethod.Pix);
 const apiPixConfig = ref<ApiPixConfig>(new ApiPixConfig());
 const openPixConfig = ref<OpenPixConfig>(new OpenPixConfig());
+const stripeConfig = ref<StripeConfig>(new StripeConfig());
 
 async function close() {
   name.value = '';
@@ -141,6 +160,7 @@ async function close() {
   paymentMethod.value = PaymentMethod.Pix;
   apiPixConfig.value = new ApiPixConfig();
   openPixConfig.value = new OpenPixConfig();
+  stripeConfig.value = new StripeConfig();
   model.value = false;
 }
 
@@ -177,6 +197,12 @@ function getGateway(): Gateway {
         ...baseGateway,
         type: GatewayType.OpenPix,
         configuration: openPixConfig.value,
+      }
+    case GatewayType.Stripe:
+      return {
+        ...baseGateway,
+        type: GatewayType.Stripe,
+        configuration: stripeConfig.value,
       }
   }
 }
