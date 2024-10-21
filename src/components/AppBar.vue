@@ -1,9 +1,9 @@
 <template>
   <v-app-bar color="background" flat>
-    <v-app-bar-nav-icon @click="drawer = !drawer"></v-app-bar-nav-icon>
+    <v-app-bar-nav-icon v-show="mdAndDown" @click="drawer = !drawer" />
 
     <v-app-bar-title>
-      {{ title }}
+      <span v-if="smAndUp">🏨</span>Reserve Já
     </v-app-bar-title>
 
     <v-menu v-if="!props.loading">
@@ -37,6 +37,7 @@
     floating
     mobile-breakpoint="md"
     width="284"
+    class="px-3"
     :scrim="false"
   >
     <div class="mx-3">
@@ -56,7 +57,6 @@
       />
     </div>
 
-    <v-divider v-if="showHotelSelect" class="my-3" />
     <div v-if="props.loading">
       <v-skeleton-loader
         v-for="i in 4"
@@ -65,10 +65,22 @@
       />
     </div>
     <v-list v-else density="comfortable">
-      <v-list-item exact to="/" prepend-icon="mdi-view-dashboard-outline" title="Visão geral" rounded="xl" class="mx-2" />
-      <v-list-item to="/hotel" prepend-icon="mdi-office-building-outline" title="Hotel" rounded="xl" class="mx-2" />
-      <v-list-item to="/rooms" prepend-icon="mdi-bed-outline" title="Quartos" rounded="xl" class="mx-2" />
-      <v-list-item to="/bookings" prepend-icon="mdi-calendar-check-outline" title="Reservas" rounded="xl" class="mx-2" />
+      <v-list-item exact to="/" rounded="xl" class="pa-3 pl-7">
+        <v-icon>mdi-view-dashboard-outline</v-icon>
+        <span class="pl-3">Visão geral</span>
+      </v-list-item>
+      <v-list-item to="/hotel" rounded="xl" class="pa-3 pl-7">
+        <v-icon>mdi-office-building-outline</v-icon>
+        <span class="pl-3">Hotel</span>
+      </v-list-item>
+      <v-list-item to="/rooms" rounded="xl" class="pa-3 pl-7">
+        <v-icon>mdi-bed-outline</v-icon>
+        <span class="pl-3">Quartos</span>
+      </v-list-item>
+      <v-list-item to="/bookings" rounded="xl" class="pa-3 pl-7">
+        <v-icon>mdi-calendar-check-outline</v-icon>
+        <span class="pl-3">Reservas</span>
+      </v-list-item>
     </v-list>
   </v-navigation-drawer>
 </template>
@@ -91,15 +103,15 @@ const props = withDefaults(
 
 const drawer = ref<boolean>();
 
-const { smAndUp } = useDisplay();
+const { smAndUp, mdAndDown } = useDisplay();
 
-const title = computed(() => {
-  if (!currentHotel.value?.name) {
-    return "Reserve Já";
-  }
+// const title = computed(() => {
+//   if (!currentHotel.value?.name) {
+//     return "Reserve Já";
+//   }
 
-  return currentHotel.value?.name;
-});
+//   return currentHotel.value?.name;
+// });
 
 const { hotels } = useListHotels();
 const { hotelId, changeCurrentHotel } = useCurrentHotel();

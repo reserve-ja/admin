@@ -1,7 +1,13 @@
 <template>
   <Page title="Quartos" icon="mdi-bed">
     <template #actions>
-      <v-btn variant="outlined" @click="syncRooms" :loading="isSyncing">Sincronizar com PMS</v-btn>
+      <v-btn
+        variant="text"
+        @click="syncRooms"
+        :loading="isSyncing"
+        prepend-icon="mdi-sync"
+        text="Sincronizar"
+      />
     </template>
     <v-data-table
       :items="rooms"

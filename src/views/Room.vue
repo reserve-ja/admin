@@ -2,17 +2,40 @@
   <PageLoading v-if="isLoadingRooms || isLoadingRates" />
   <Page :title="room?.name ?? ''" previous-route="/rooms" v-else>
     <template #actions>
-      <v-btn
-        variant="outlined"
-        text="Editar"
-        class="mx-1"
-        @click="editDetailsDialog = true"
-      />
-      <v-btn
-        text="Adicionar tarifa"
-        class="mx-1"
-        @click="addRateDialog = true"
-      />
+      <v-menu v-if="smAndDown">
+        <template v-slot:activator="{ props }">
+          <v-btn icon="mdi-dots-vertical" variant="text" v-bind="props" size="small" />
+        </template>
+
+        <v-list>
+          <v-list-item
+            prepend-icon="mdi-pencil-outline"
+            title="Editar"
+            @click="editDetailsDialog = true"
+          />
+          <v-list-item
+            prepend-icon="mdi-calendar-plus-outline"
+            title="Adicionar tarifa"
+            @click="addRateDialog = true"
+          />
+        </v-list>
+      </v-menu>
+      <div v-else>
+        <v-btn
+          variant="text"
+          prepend-icon="mdi-pencil-outline"
+          text="Editar"
+          class="mx-1"
+          @click="editDetailsDialog = true"
+        />
+        <v-btn
+          variant="text"
+          prepend-icon="mdi-calendar-plus-outline"
+          text="Adicionar tarifa"
+          class="mx-1"
+          @click="addRateDialog = true"
+        />
+      </div>
     </template>
     <template #default>
       <v-row>
@@ -72,6 +95,7 @@ import { computed } from 'vue';
 import { useRatePlans } from '@/services/rate-plan';
 import { formatMoney } from '@/services/money';
 import { formatDate } from '@/services/date';
+import { useDisplay } from 'vuetify';
 
 const props = defineProps<{ roomId: string }>();
 
@@ -115,4 +139,6 @@ function deleteRate(item: Rate) {
   deleteRateRateId.value = item.id;
   deleteRateDialog.value = true;
 }
+
+const { smAndDown } = useDisplay();
 </script>

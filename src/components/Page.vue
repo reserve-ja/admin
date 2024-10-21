@@ -1,10 +1,10 @@
 <template>
   <v-card scrollable class="rounded-0 h-100" variant="flat" :class="{ 'mx-5': smAndUp, 'rounded-xl': smAndUp }">
-    <v-card-item class="pa-2" :class="{ 'pt-3': !previousRoute }">
+    <v-card-item class="page-top-bar py-3 px-4 border-b-thin" :class="{ 'pl-2': previousRoute, 'mt-3': smAndUp }">
       <v-card-title class="d-flex align-center">
         <v-btn v-if="previousRoute" :to="previousRoute" exact icon="mdi-arrow-left" variant="text" />
         <!-- <v-icon v-if="icon" :icon="icon" start size="large" /> -->
-        <span class="text-h5 pl-3" :class="{ 'pl-4': !previousRoute }">{{ title }}</span>
+        <span class="font-weight-regular">{{ title }}</span>
       </v-card-title>
 
       <template v-slot:append>
@@ -23,7 +23,7 @@
       <slot name="actions"></slot>
     </v-toolbar> -->
 
-    <div class="overflow-y-auto h-100 px-6 pb-10">
+    <div class="overflow-y-auto h-100 px-4 pb-10">
       <div class="mb-10">
         <slot></slot>
       </div>
