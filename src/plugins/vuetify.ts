@@ -13,7 +13,6 @@ import { createVuetify } from 'vuetify'
 import { md3 } from 'vuetify/blueprints'
 
 // Components
-import { VEmptyState } from 'vuetify/labs/VEmptyState'
 import { VNumberInput } from 'vuetify/labs/VNumberInput'
 
 // https://vuetifyjs.com/en/introduction/why-vuetify/#feature-guides
@@ -30,7 +29,6 @@ export default createVuetify({
     },
   },
   components: {
-    VEmptyState,
     VNumberInput,
   },
   defaults: {
