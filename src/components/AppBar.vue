@@ -1,18 +1,18 @@
 <template>
-  <v-app-bar color="background" flat>
+  <v-app-bar color="background" flat class="px-1" :class="{ 'px-4': smAndUp }">
     <v-app-bar-nav-icon v-show="mdAndDown" @click="drawer = !drawer" />
 
     <v-app-bar-title>
-      <span v-if="smAndUp">🏨</span>Reserve Já
+      <span v-if="smAndUp">🏨 </span>Reserve Já
     </v-app-bar-title>
 
     <v-menu v-if="!props.loading">
       <template v-slot:activator="{ props }">
-        <div v-bind="props" class="mr-5 account-menu">
-          <span v-if="smAndUp">
+        <div v-bind="props" class="account-menu">
+          <span v-if="smAndUp" class="text-body-2">
             {{ session?.user.email?.split("@")[0] }}
           </span>
-          <v-avatar color="primary" class="ml-2">
+          <v-avatar color="primary" class="ml-2" size="small" :class="{ 'mr-1': !smAndUp }">
             {{ session?.user.email?.charAt(0).toUpperCase() }}
           </v-avatar>
         </div>
@@ -37,24 +37,11 @@
     floating
     mobile-breakpoint="md"
     width="284"
-    class="px-3"
+    class="px-3 pt-6"
     :scrim="false"
   >
-    <div class="mx-3">
-      <v-skeleton-loader
-        v-if="props.loading"
-        type="list-item"
-      />
-      <v-autocomplete
-        v-else-if="showHotelSelect"
-        :model-value="currentHotel"
-        @update:model-value="changeHotel"
-        :items="hotels"
-        hide-details
-        item-title="name"
-        item-value="id"
-        return-object
-      />
+    <div class="mx-3 mb-3">
+      <HotelSelect :loading="loading" />
     </div>
 
     <div v-if="props.loading">
@@ -65,33 +52,27 @@
       />
     </div>
     <v-list v-else density="comfortable">
-      <v-list-item exact to="/" rounded="xl" class="pa-3 pl-7">
-        <v-icon>mdi-view-dashboard-outline</v-icon>
-        <span class="pl-3">Visão geral</span>
+      <v-list-item
+        v-for="item in menuItems"
+        :exact="item.exact"
+        :to="item.to"
+        rounded="xl"
+        color="primary"
+        class="pa-3 pl-7"
+      >
+        <v-icon>{{ item.icon }}</v-icon>
+        <span class="text-subtitle-2 pl-3 ">{{ item.label }}</span>
       </v-list-item>
-      <v-list-item to="/hotel" rounded="xl" class="pa-3 pl-7">
-        <v-icon>mdi-office-building-outline</v-icon>
-        <span class="pl-3">Hotel</span>
-      </v-list-item>
-      <v-list-item to="/rooms" rounded="xl" class="pa-3 pl-7">
-        <v-icon>mdi-bed-outline</v-icon>
-        <span class="pl-3">Quartos</span>
-      </v-list-item>
-      <v-list-item to="/bookings" rounded="xl" class="pa-3 pl-7">
-        <v-icon>mdi-calendar-check-outline</v-icon>
-        <span class="pl-3">Reservas</span>
-      </v-list-item>
+
     </v-list>
   </v-navigation-drawer>
 </template>
 
 <script setup lang="ts">
-import { ref, watchEffect } from 'vue'
+import { ref } from 'vue'
 import { useAuth } from '@/services/auth'
-import { computed } from 'vue';
-import { useListHotels, useCurrentHotel } from '@/services/hotel';
-import { Hotel } from '@/services/hotel.types';
 import { useDisplay } from 'vuetify';
+import HotelSelect from './HotelSelect.vue';
 
 interface Props {
   loading: boolean
@@ -103,32 +84,15 @@ const props = withDefaults(
 
 const drawer = ref<boolean>();
 
-const { smAndUp, mdAndDown } = useDisplay();
+const { smAndUp, mdAndDown, name } = useDisplay();
 
-// const title = computed(() => {
-//   if (!currentHotel.value?.name) {
-//     return "Reserve Já";
-//   }
+const menuItems = [
+  { label: "Visão geral", icon: "mdi-view-dashboard-outline",  to: "/" ,        exact: true  },
+  { label: "Hotel",       icon: "mdi-office-building-outline", to: "/hotel",    exact: false },
+  { label: "Quartos",     icon: "mdi-bed-outline",             to: "/rooms",    exact: false },
+  { label: "Reservas",    icon: "mdi-calendar-check-outline",  to: "/bookings", exact: false },
+];
 
-//   return currentHotel.value?.name;
-// });
-
-const { hotels } = useListHotels();
-const { hotelId, changeCurrentHotel } = useCurrentHotel();
-
-const showHotelSelect = computed(() => {
-  return (hotels.value?.length ?? 0) > 1;
-});
-
-const currentHotel = computed(() => {
-  return hotels.value?.find(hotel => hotel.id === hotelId.value);
-})
-
-// const router = useRouter();
-function changeHotel(hotel: Hotel) {
-  changeCurrentHotel(hotel.id);
-  // router.push({ name: 'Hotel' });
-}
 
 const { session, logout } = useAuth();
 </script>

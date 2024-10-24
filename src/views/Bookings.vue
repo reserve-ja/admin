@@ -1,6 +1,6 @@
 <template>
   <Page title="Reservas">
-    <div class="d-flex w-100 py-4 overflow-x-auto">
+    <div class="d-flex w-100 overflow-x-auto">
       <!-- <v-chip rounded variant="outlined" class="mx-1" @click="search">
         <v-icon start>mdi-calendar-start-outline</v-icon>
         Check in de
