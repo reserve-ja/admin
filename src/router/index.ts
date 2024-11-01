@@ -18,6 +18,7 @@ const routes = [
         props: true,
         component: () => import('@/views/BookingDetails.vue')
       },
+      { path: 'config/notifications', name: 'ConfigurationNotifications', component: () => import('@/views/ConfigurationNotifications.vue') },
     ],
   },
 ]

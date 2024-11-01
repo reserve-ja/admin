@@ -1,7 +1,7 @@
 <template>
   <PageLoading v-if="isLoadingHotels" />
   <PageUnauthorized v-else-if="!hasPermission(currentHotel?.id, 'hotel.write')" />
-  <Page title="Editar hotel" previous-route="/hotel">
+  <Page v-else title="Editar hotel" previous-route="/hotel">
     <template #default>
       <v-form @submit.prevent="save" v-model="isValid">
         <v-row>

@@ -1,7 +1,7 @@
 <template>
   <PageLoading v-if="!hotels || hotels.length === 0 || isLoadingHotels || isLoadingBooking || isLoadingRooms" />
   <PageUnauthorized v-else-if="!hotels?.some(h => h.id == hotelId)" />
-  <Page title="Reserva" previous-route="/bookings" v-else>
+  <Page v-else title="Reserva" previous-route="/bookings">
     <template #default>
       <v-row>
         <v-col cols="12" md="6">

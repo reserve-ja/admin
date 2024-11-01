@@ -16,6 +16,8 @@ export function useUser() {
     user.value = undefined;
   }
 
+  const isLoadingUser = computed(() => user.value === undefined || user.value === null);
+
   const hasPermission = computed(() => (hotelId: string|undefined, permission: PermissionKey) => {
     if (!hotelId) {
       return false;
@@ -32,7 +34,7 @@ export function useUser() {
     return user.value?.isSuperAdmin ?? false;
   });
 
-  return { user, hasPermission, isSuperAdmin, fetchUser, clearUser };
+  return { user, isLoadingUser, hasPermission, isSuperAdmin, fetchUser, clearUser };
 }
 
 export interface User {

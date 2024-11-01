@@ -21,9 +21,20 @@ export default createVuetify({
     themes: {
       light: {
         colors: {
-          primary: '#212121',
-          secondary: '#5CBBF6',
-          background: '#F0F4F9'
+          primary: '#04466E',
+          secondary: '#364453',
+          background: '#e6e8ee',
+          surface: '#F7F9FF',
+          error: '#8C0009',
+          "on-primary": '#FFFFFF',
+          "on-secondary": '#FFFFFF',
+          "on-background": '#181C20',
+          "on-surface": '#181C20',
+          "on-error": '#FFFFFF',
+        },
+        dark: false,
+        variables: {
+
         },
       },
     },

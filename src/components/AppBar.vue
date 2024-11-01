@@ -64,6 +64,30 @@
         <span class="text-subtitle-2 pl-3 ">{{ item.label }}</span>
       </v-list-item>
 
+      <v-list-group>
+        <template v-slot:activator="{ props }">
+          <v-list-item
+            v-bind="props"
+            rounded="xl"
+            color="primary"
+            class="pa-3 pl-7"
+          >
+            <v-icon>mdi-cog-outline</v-icon>
+            <span class="text-subtitle-2 pl-3 ">Configurações</span>
+          </v-list-item>
+        </template>
+
+        <v-list-item
+          v-for="item in configItems"
+          :to="item.to"
+          rounded="xl"
+          color="primary"
+          class="pa-3"
+        >
+          <v-icon class="ml-7">{{ item.icon }}</v-icon>
+          <span class="text-subtitle-2 pl-3">{{ item.label }}</span>
+        </v-list-item>
+      </v-list-group>
     </v-list>
   </v-navigation-drawer>
 </template>
@@ -93,6 +117,11 @@ const menuItems = [
   { label: "Reservas",    icon: "mdi-calendar-check-outline",  to: "/bookings", exact: false },
 ];
 
+const configItems = [
+  // { label: "Integração PMS", icon: "mdi-cloud-sync-outline", to: "/config/pms" },
+  // { label: "Pagamento",      icon: "mdi-cash",               to: "/config/payment" },
+  { label: "Notificações",   icon: "mdi-email-outline",      to: "/config/notifications" },
+]
 
 const { session, logout } = useAuth();
 </script>
