@@ -105,7 +105,7 @@
                     r.date === header.value &&
                     r.guests === room.capacity
                   )?.price || ''"
-                  @blur="(e: FocusEvent ) => updateValue(room.id, ratePlan.id, header.value, (e.target as HTMLInputElement).value)"
+                  @blur="(e: FocusEvent ) => updateValue(room.id, ratePlan.id, header.value, (e.target as HTMLInputElement).value as unknown as number)"
                   bg-color="surface"
                 />
               </td >

@@ -73,14 +73,7 @@
             label="Ocupação"
             readonly
             prepend-icon="mdi-account-multiple-outline"
-          >
-            <template #decrement="{ click }">
-              <v-btn @click="click" variant="text" icon="mdi-chevron-down" />
-            </template>
-            <template #increment="{ click }">
-              <v-btn @click="click" variant="text" icon="mdi-chevron-up" />
-            </template>
-          </v-number-input>
+          />
         </v-col>
         <v-col cols="12" md="6">
           <v-text-field

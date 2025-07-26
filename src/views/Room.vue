@@ -89,7 +89,7 @@ import AddRateDialog from '@/components/AddRateDialog.vue';
 import RemoveRateDialog from '@/components/RemoveRateDialog.vue';
 import { useCurrentHotel } from '@/services/hotel';
 import { useRooms } from '@/services/room';
-import { Room, Rate } from '@/services/room.types';
+import { Room } from '@/services/room.types';
 import { ref } from 'vue';
 import { computed } from 'vue';
 import { useRatePlans } from '@/services/rate-plan';
@@ -97,6 +97,7 @@ import { formatMoney } from '@/services/money';
 import { formatDate } from '@/services/date';
 import { useDisplay } from 'vuetify';
 import { useRoomRates } from '@/services/rates';
+import { Rate } from '@/services/rates.types';
 
 const props = defineProps<{ roomId: string }>();
 
