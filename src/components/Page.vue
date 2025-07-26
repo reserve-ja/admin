@@ -1,29 +1,47 @@
 <template>
-  <v-card
-    scrollable
-    variant="flat"
-    ref="card"
-    class="rounded-0 h-100"
-    :class="{ 'mx-5': smAndUp, 'rounded-xl': smAndUp }"
-  >
-    <v-card-item class="page-top-bar py-3 px-4 border-b-thin" :class="{ 'pl-2': previousRoute || $slots.prepend, 'mt-3': smAndUp }">
-      <v-card-title class="d-flex align-center">
+  <div class="fill-height" :class="{ 'pb-5': smAndUp }">
+    <v-sheet
+      scrollable
+      variant="flat"
+      ref="card"
+      class="rounded-0 fill-height d-flex flex-column"
+      :class="{ 'mx-5': smAndUp, 'rounded-xl': smAndUp }"
+    >
+      <div
+        class="d-flex align-center page-top-bar py-3 px-4 border-b-thin"
+        :class="{ 'pl-2': previousRoute || $slots.prepend, 'pt-5': smAndUp }"
+      >
         <v-btn v-if="previousRoute" :to="previousRoute" exact icon="mdi-arrow-left" variant="text" />
         <slot name="prepend"></slot>
+
         <span class="font-weight-regular">{{ title }}</span>
-      </v-card-title>
 
-      <template v-slot:append>
+        <v-spacer />
+
         <slot name="actions"></slot>
-      </template>
-    </v-card-item>
+      </div>
+      <!--
+      <v-card-item class="page-top-bar py-3 px-4 border-b-thin" :class="{ 'pl-2': previousRoute || $slots.prepend, 'mt-3': smAndUp }">
+        <v-card-title class="d-flex align-center">
+          <v-btn v-if="previousRoute" :to="previousRoute" exact icon="mdi-arrow-left" variant="text" />
+          <slot name="prepend"></slot>
+          <span class="font-weight-regular">{{ title }}</span>
+        </v-card-title>
 
-    <div class="overflow-y-auto h-100 px-4 pt-6 pb-10" ref="content">
-      <div class="mb-10">
+        <template v-slot:append>
+          <slot name="actions"></slot>
+        </template>
+      </v-card-item>
+
+      -->
+      <div class="overflow-y-auto pa-4" ref="content">
         <slot></slot>
       </div>
-    </div>
-  </v-card>
+
+      <div v-if="smAndUp" class="mt-auto pt-4">
+      </div>
+    </v-sheet>
+  </div>
 </template>
 
 <script setup lang="ts">

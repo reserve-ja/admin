@@ -1,7 +1,7 @@
 import { Ref, computed } from "vue"
 import { http } from "./http";
 import { useMutation, useQuery } from "@tanstack/vue-query";
-import { Rate, Room, WeekDay } from "./room.types";
+import { Room, WeekDay } from "./room.types";
 import { queryClient } from "./query";
 
 export function useRooms(hotelId: Ref<string>) {
@@ -35,22 +35,6 @@ export function useSyncRooms(hotelId: Ref<string>) {
   });
 
   return { syncRooms, isSyncing };
-}
-
-export function useRoomRates(hotelId: Ref<string>, roomId: Ref<string>) {
-  const { data: rates, isPending: isLoadingRates } = useQuery<Rate[]>({
-    queryKey: [ 'rates', { hotelId, roomId } ],
-    queryFn: async () => {
-      if (!hotelId.value || !roomId.value) {
-        return [];
-      }
-
-      const { data } = await http.get(`/hotels/${hotelId.value}/rooms/${roomId.value}/rates`);
-      return data;
-    }
-  });
-
-  return { rates, isLoadingRates };
 }
 
 export function useEditRoomDetails() {
@@ -110,8 +94,7 @@ export function useAddRate() {
     },
     onSuccess: (data, variables) => {
       queryClient.invalidateQueries({
-        queryKey: [ 'rates', { hotelId: variables.hotelId, roomId: variables.roomId } ],
-        exact: true,
+        queryKey: [ 'rates' ],
         refetchType: "all",
       });
     },
@@ -135,8 +118,7 @@ export function useRemoveRate() {
     },
     onSuccess: (data, variables) => {
       queryClient.invalidateQueries({
-        queryKey: [ 'rates', { hotelId: variables.hotelId, roomId: variables.roomId } ],
-        exact: true,
+        queryKey: [ 'rates' ],
         refetchType: "all",
       });
     },

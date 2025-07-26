@@ -112,6 +112,7 @@ const { smAndUp, mdAndDown, name } = useDisplay();
 
 const menuItems = [
   { label: "Visão geral", icon: "mdi-view-dashboard-outline",  to: "/" ,        exact: true  },
+  { label: "Calendário",  icon: "mdi-calendar-range-outline",  to: "/calendar", exact: true  },
   { label: "Hotel",       icon: "mdi-office-building-outline", to: "/hotel",    exact: false },
   { label: "Quartos",     icon: "mdi-bed-outline",             to: "/rooms",    exact: false },
   { label: "Reservas",    icon: "mdi-calendar-check-outline",  to: "/bookings", exact: false },

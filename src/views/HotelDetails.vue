@@ -56,13 +56,13 @@
       </div>
     </template>
     <template #default>
-      <v-row>
+      <v-row class="">
         <v-col cols="12" md="6">
-          <p class="text-h6 font-weight-regular pt-3">Detalhes</p>
+          <p class="text-h6 font-weight-regular">Detalhes</p>
           <DetailsTable :items="details" />
         </v-col>
         <v-col cols="12" md="6" v-if="hotelId">
-          <p class="text-h6 font-weight-regular pt-3">Gateways de pagamento</p>
+          <p class="text-h6 font-weight-regular">Gateways de pagamento</p>
           <PaymentGatewayList :hotel-id="hotelId" />
         </v-col>
       </v-row>

@@ -1,6 +1,6 @@
 <template>
   <app-bar :loading="false"/>
-  <v-main class="h-100" :class="{ 'pb-5': smAndUp }">
+  <v-main class="h-100" :class="{ '': smAndUp }">
     <router-view />
   </v-main>
 </template>

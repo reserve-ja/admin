@@ -8,14 +8,6 @@ export type Room = {
   photos: string[],
 }
 
-export type Rate = {
-  id: string,
-  roomId: string,
-  ratePlanId: string,
-  price: number,
-  date: string,
-}
-
 export enum WeekDay {
   Sunday = "Sunday",
   Monday = "Monday",

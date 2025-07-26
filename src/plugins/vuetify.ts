@@ -13,7 +13,7 @@ import { createVuetify } from 'vuetify'
 import { md3 } from 'vuetify/blueprints'
 
 // Components
-import { VNumberInput } from 'vuetify/labs/VNumberInput'
+import { VDateInput } from 'vuetify/labs/VDateInput'
 
 // https://vuetifyjs.com/en/introduction/why-vuetify/#feature-guides
 export default createVuetify({
@@ -40,7 +40,7 @@ export default createVuetify({
     },
   },
   components: {
-    VNumberInput,
+    VDateInput,
   },
   defaults: {
     VBtn: {

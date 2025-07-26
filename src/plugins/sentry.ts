@@ -9,6 +9,7 @@ export default function useSentry(app: App) {
       Sentry.browserTracingIntegration(),
       Sentry.replayIntegration(),
     ],
+    environment: import.meta.env.MODE,
     // Performance Monitoring
     tracesSampleRate: 1.0, //  Capture 100% of the transactions
     // Set 'tracePropagationTargets' to control for which URLs distributed tracing should be enabled

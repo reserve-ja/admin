@@ -3,6 +3,18 @@
     <v-form ref="form">
       <v-row>
         <v-col>
+          <v-text-field
+            :model-value="room?.name"
+            label="Quarto"
+            readonly
+            disabled
+            prepend-inner-icon="mdi-bed"
+            hide-details
+          />
+        </v-col>
+      </v-row>
+      <v-row>
+        <v-col>
           <v-select
             prepend-inner-icon="mdi-label-outline"
             v-model="ratePlanId"
